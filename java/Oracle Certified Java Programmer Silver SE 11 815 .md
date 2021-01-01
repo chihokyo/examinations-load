@@ -2,11 +2,7 @@
 
 ## 第1章 简单开始
 
-8题
-
-A C E、B，AC，C，ABE，C，AB，C
-
-ACD 、B、AC、C、ABE、 B、BC, B
+T1
 
 package主要作用
 
@@ -48,7 +44,9 @@ public static void main(String... args) # 都可以的
 
 T6
 
-T7 这一题蛮难的。
+T7 
+
+这一题蛮难的。
 
 首先要知道人家说的是执行.class 我第一上来想的是执行.java
 
@@ -69,7 +67,9 @@ java Sample.java a,b,c #就这样就可以了
 - Java source file 源文件。你写的程序。
 - Java bytecode file 二进制人间。编译过后的。
 
-T8也很难 ？
+T8
+
+也很难 ？
 
 关于启动参数包含空格还有escape符号的问题。
 
@@ -92,8 +92,6 @@ Boolean Char
 **T1**
 
 考察的是Boolean 初始化的时候 不是 Boolean 而不是bool
-
- 
 
 ## 第3章 运算符和判定
 
@@ -1792,15 +1790,15 @@ module 调用模块名 {
 
 第一题就错了呢。
 
-T1
+#### T1
 
 source file mode java指令可以直接进行编译了。
 
 编译a的时候顺便依赖的b就编译了。编译和运行时2码事。
 
-T2 简单 略
+#### T2 简单 略
 
-T3
+#### T3
 
 关于import的时候要import全名的问题。
 
@@ -1811,7 +1809,7 @@ java.lang里面的类无需import
 - 完全修饰
 - 部分修饰
 
-T4
+#### T4
 
 lambda表示的变量想要使用必须是final 所以如果卸载里面了进行修改就会报错。
 
@@ -1826,7 +1824,7 @@ public class Sample {
 }
 ```
 
-T5
+#### T5
 
 关于变量其实的区别。下面的num明显指向不明，所以会出现变异报错。
 
@@ -1844,9 +1842,9 @@ public class Sample {
 }
 ```
 
-T6 略
+#### T6 略
 
-T7
+#### T7
 
 很经典。可以写。
 
@@ -1864,7 +1862,7 @@ public static void main (String[] args) throws java.lang.Exception
 	}
 ```
 
-T8
+#### T8
 
 记住几个常用的方法API
 
@@ -1878,7 +1876,7 @@ java.lang.Character;
 	isDigit();
 ```
 
-T9
+#### T9
 
 查询类和module之间的关系。使用 jdeps
 
@@ -1888,7 +1886,7 @@ jmod 是生成module的命令。
 
 jar  打包命令
 
-T10
+#### T10
 
 这一题很好了。
 
@@ -1907,9 +1905,9 @@ public class C extends B implements A {
 }
 ```
 
-T11 略
+#### T11 略
 
-T12
+#### T12
 
 ```java
 public static void main (String[] args) throws java.lang.Exception
@@ -1922,7 +1920,7 @@ public static void main (String[] args) throws java.lang.Exception
 }
 ```
 
-T13 这一题可以和第3章T19一起配合服用。
+#### T13 这一题可以和第3章T19一起配合服用。
 
 从java7开始switch条件里面就可以使用String和Enum这样的引用数据类型了。但是这样的数据类型有一个需要注意的就是不能为null。
 
@@ -1930,7 +1928,7 @@ T13 这一题可以和第3章T19一起配合服用。
 
 ![image-20201223141323650](/Users/Chihokyo/Library/Application Support/typora-user-images/image-20201223141323650.png)
 
-T20
+#### T20
 
 ```java
 public static void main (String[] args) throws java.lang.Exception
@@ -2023,7 +2021,7 @@ public class B extends A {
 
 ![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201223181356.png)
 
-### T27
+#### T27
 
 关于重载和数据默认类型问题。
 
@@ -2083,7 +2081,7 @@ public class Main {
 }
 ```
 
-### T32
+#### T32
 
 抽象类里面可以有抽象方法也可以有普通方法。
 
@@ -2098,7 +2096,7 @@ public class Main {
 
 跟第9章T14一样的。
 
-### T34
+#### T34
 
 终于明白了switch的用法了。
 
@@ -2309,4 +2307,361 @@ public class Main {
     }
 }
 ```
+
+#### T45
+
+就是考察override的条件
+
+- 函数名和参数要一样
+- 返回值要一样 或者是子类
+- 修饰权限一定要大于父类的
+
+还有一个很重要的，2个要存在实现或者子父类关系。不然就没任何意义。
+
+```java
+public interface Sample {
+    void test(); // 这里其实省略了public static
+}
+// 没问题 函数名&参数&返回值&权限修饰符
+public class SampleTest implements Sample {
+    @Override
+    public void test(){
+        System.out.println("test");
+    }
+}
+// 根本没关系
+public class SampleTest2 {
+    @Override
+    public void test(){
+        System.out.println("test");
+    }
+}
+// 抽象方法 没问题
+public abstract class SampleTest3 implements Sample {
+    @Override
+    public abstract void test();
+}
+// 抽象方法 没问题
+// 这里的抽象方法是必须重写的 
+public abstract class SampleTest4 implements Sample {
+    @Override
+    public void test(){
+        System.out.println("test");
+
+```
+
+#### T46
+
+`java.time.LocalDate`class的话，LocalDate.now() 
+
+返回的就是年月日 2020-12-26 这样
+
+#### T47
+
+不难。略
+
+#### T48
+
+这一题如果是以前的我肯定是会做错的，因为前++和后++我记得不清楚。
+
+但是现在记得清楚了。这个++是后加的，所以在输出的时候是1，后来进行了++操作。
+
+```java
+> java Main a b c
+public class Main {
+  public static void main(String[] args) {
+    int i = 1;
+    for(String s: args) {
+      System.out.println((i++) + ")" + s);
+    }
+  }
+}
+```
+
+#### T49
+
+考察关于field和local variable的作用域问题。
+
+- 如果重名。在method里面必须要用this明示是哪里。如果没写。就默认是local variable
+
+这一题主要就俩点。=执行顺序是从右到左。所以先开始的
+
+```
+a = b = this.c = 10
+所以这样 this.c就是10 也就是说field的c就是10
+```
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231001946.png)
+
+#### T50
+
+这一题刚开始绝对傻逼了。
+
+跳出来之后是不会执行 System.out.println(num);  
+
+然后因为num 这个时候已经是1了 所以在while判断num<1的时候就是错的，根本没机会了。
+
+所以答案是没有输出结果的。
+
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+        int num = 0;
+        do {
+            num++;
+            if (num == 1) { //这里判断正确之后就跳过这一层循环，进入第2次了
+                continue;
+            } 
+            System.out.println(num); 
+        } while (num < 1);
+    }
+}
+```
+
+#### T51
+
+try-catch-finally注意点
+
+- tr-catch-finally 必须按照顺序
+- catch可以有多个
+- finally只能有一个
+
+finally都是最后一个执行，哪怕在try-with-resource的情况下。
+
+#### T52
+
+这一题不是很难。就是要知道`mismatch()`还有`compare()`的区别
+
+mismatch是找第一个不同的index到底在哪里
+
+compare比较大小
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231003016.png)
+
+#### T53
+
+第一次做不会。全蒙的。考察的`java.lang.Math`这个库
+
+round这个方法参数要么是double 要么是float 浮动小数的四舍五入 出来的是int
+
+反正是不能接受俩参数的。
+
+**这一题需要注意的是 类型转换优先于算数演算** 所以。先转型
+
+```java
+float a = Math.round((float) x / y * 100) / (float) 100;
+// 先把round的结果除以已经转换的100，x也是先转换成了float
+// 所以就是 5.0/2 * 100 这个时候结果是250.0 然后除以100.0 那就是2.5
+float a = (float)(Math.round((float) x / y * 100)/100)
+// 这里的问题就是 Math.round((float) x / y * 100) 之后是250 250/100 相当于int/int 这个时候出来的是2 所以是错的
+```
+
+#### T54
+
+这一题有一个误区。不小心掉进去的我做错了。
+
+```java
+public interface Sample {
+  void test();
+}
+// 这里是一个普通类实现的接口 必须重写全部的方法的。（抽象类的话就不用重写全部了
+class SampleImpl implements Sample {
+  @Override
+  public void test(){
+    
+  }
+}
+// 这里是继承不是实现啊，所以重载是可以的啊
+class SubSampleImpl extend SampleImpl {
+  void test(int x){
+    
+  }
+}
+```
+
+#### T55
+
+把握不住。
+
+**最重要的就是char和数值型的互相转换。B可以使因为强制转换是可以的。**
+
+**但是C那种不是强制转换的情况是不可以的。**
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231005159.png)
+
+#### T56
+
+注意层次就不会出问题。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231005803.png)
+
+#### T57
+
+反正就是不能把父类写前面。不然就是编译错误。
+
+#### T58
+
+```java
+int num = 9;
+if(num++ < 10){ // 因为是后++ 所以先比较后++ 也就是比较用的是9 输出是10
+  sysout(num);
+}else {
+  sysout("B")
+}
+```
+
+#### T59
+
+不难。String和数字连接一起的时候就成了String。略
+
+#### T60
+
+关于各种数据类型的转换问题。
+
+short int 可以转换成 long这些更大的。Integer可以解包成int
+
+但是这些数字和String不能转换的。
+
+```java
+short s1 = 10;
+Integer s2 = 20;
+Long s3 = (long) s1 + s2;
+String s4 = (String)(s3 + s2); //出错了
+sysout(s4)
+```
+
+#### T61
+
+String是不可变类型。所以只要有一个不一样的。那么常量池就会有一个。
+
+**== 引用数据类型判断的是地址是否相等。**
+
+```java
+String s1 = new String("Java")
+String s2 = "Java";
+String s3 = s1.intern(); 
+// 上面第一种方式就new一个对象。s2就是常量池那种。s3就是复制一份s1的地址。
+```
+
+#### T62
+
+很简单 略
+
+#### T63
+
+错了。所以分析一下。
+
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+        int x; // int x = 8;随便赋值一个都是对的
+        int y = 3;
+        if (y > 2) {
+            x = ++y;
+            y = x + 5;
+        }  else {
+            y++;
+        }
+        System.out.println(x + "," + y);// 这里x没有初始化的 对应上面的int x;
+    }
+}
+```
+
+#### T64
+
+不用解释的
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231154753.png)
+
+#### T65
+
+记着默认省略了一个super 就没事了
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231155025.png)
+
+#### T66
+
+就是一个很简单的记忆。略
+
+#### T67
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231155501.png)
+
+#### T68
+
+不难
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231155710.png)
+
+#### T69
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231160008.png)
+
+#### T70
+
+关于java想执行module内的class的话。
+
+那么就要指定module路径和class全名
+
+```
+java --module-path （module的root路径）-m (module的class)
+```
+
+#### T71
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231161646.png)
+
+#### T72
+
+主要是明白API用法 还有必须记着，这个是`public StringBuilder replace(int start, int end, String `str)
+
+不是String 这里的用法和上面的不一样。
+
+`replace（起始位置，结束为止，需要替换的字符串）`  还有 `indexOf()`　的用法
+
+只要明白了这个用法就行了
+
+#### T73
+
+不难。略。
+
+#### T74
+
+即使生成了Object的数组实例，但是里面的元素并没有被实例化。所以就只是一个空壳。要素都是null。
+
+![image-20201231163228600](/Users/Chihokyo/Library/Application Support/typora-user-images/image-20201231163228600.png)
+
+`NullPointerException` 空指针错误
+
+#### T75
+
+module-info.java
+
+需要的，使用requires
+
+想要公开的，使用exports
+
+#### T76
+
+简单。略。
+
+#### T77
+
+这个就是重写的时候，虽然可以使用更大的父类。**多态**
+
+但是如果已经有了具体的类型，就用具体的类型。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231163728.png)
+
+#### T78
+
+子类的权限只能比父类大。略
+
+#### T79
+
+略。记忆类的。java.base 里面有标准库
+
+#### T80
+
+略。不难。
 
