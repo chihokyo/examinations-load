@@ -1583,7 +1583,7 @@ List 首先是Collection一个接口，然后实现了Iterable接口之后就可
 
 **T2**
 
-finally一般都是必须会去执行的。所以这一题也不难。
+Òfinally一般都是必须会去执行的。所以这一题也不难。
 
 **T3**
 
@@ -2665,3 +2665,78 @@ module-info.java
 
 略。不难。
 
+## 二轮
+
+E ABD A DEF C C A D D D
+
+#### T1
+
+关于异常的体系问题。
+
+- error
+
+- 异常（执行异常，非执行异常）
+
+可以看一下这篇文章
+
+https://www.cnblogs.com/sqjinbao/p/13372901.html
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210102234653.png)
+
+只有checked异常才必须要写。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210102235156.png)
+
+#### T2
+
+这一题没错，不是很难。主要就是不可变类型不能被继承不能重写不能改变。如果想改变必须复制或者生成一个新的不相干的实例。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210102235517.png)
+
+#### T3
+
+不难
+
+小转大 自动的 无需显示 *int -> double*
+
+小转大 强制的 必须明示 *double -> int*
+
+#### T4
+
+不是很难。主要是继承的问题。继承之后记住如果field权限是default（没写），那么只有一个包的才能调用。否则不行。
+
+#### T5
+
+这一题也不是很难，主要分清**本地变量**和**类变量**。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103000240.png)
+
+#### T6
+
+不难，记住继承关系。
+
+public 什么都可以
+
+private 什么都不可以
+
+protected 继承就可以
+
+default（不写） 必须在一个包
+
+#### T7
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103000701.png)
+
+#### T8
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103000829.png)
+
+#### T9
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103001418.png)
+
+#### T10
+
+这一题完全是考察 var的用法
+
+var只能用在本地变量里不能用在类变量。而且var也不能用作返回值。我这个傻子。
