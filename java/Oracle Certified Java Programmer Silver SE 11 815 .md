@@ -2786,3 +2786,115 @@ int c = b = 22 = b + a/5 略
 #### T20
 
 略
+
+#### T21
+
+这一题做错了。分析了一下。是自己没分析对这一题。
+
+主要看这一题的答案。
+
+```java
+public class Sample {
+  private int num;
+  private int test(){
+    for(int i = 0; i < 3; i++){
+      num += i;// 3 这里就开始修改上面的num
+    }
+    return num;// 4 返回
+  }
+  public static void main(String[] args){
+    Sample s = new Sample(); // 1 新建对象
+    int num = s.test();// 2 - 5 这里num就是接收返回值3 但是注意，这里的num 是这个main函数的变量。和上面的都无关 
+    s.test();// 6这里继续修改了 但是下面输出的是本地的变量num
+    System.out.println(num);// 输出3
+    System.out.println(s.num);// 输出6
+  }
+}
+```
+
+#### T22
+
+略
+
+#### T23
+
+这一题也是蛮有意思的。
+
+关于多态的变量field问题。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103225022.png)
+
+#### T24
+
+略
+
+#### T25
+
+这一题做对了。但是原因错了。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103225343.png)
+
+#### T26
+
+```java
+public class Main {
+	int num;
+  private static void test(){
+    num ++;// 这个num不是static的 所以就会报错的
+    System.out.println(num);
+  }
+  public static void main(String[] args){
+    Main.test();// static方法只能呼出static方法 但是这一题的问题是↑
+    Main.test();
+  }
+}
+```
+
+#### T27
+
+这一题真是大意了。
+
+String 作为不可变类型。怎么就这么写了呢。
+
+```java
+String str = "abcde";
+str.replace('c', 'x');
+str.substring(2, 4);
+System.out.println(str);// abcde
+
+
+class Sample {
+  public static void main(String[] args){
+    String str = "abcde";
+    str = str.replace('c', 'x');
+    str = str.substring(2, 4);
+    System.out.println(str);// xd
+  }
+}
+```
+
+#### T28
+
+这一题纯粹是根本不会。不熟悉吧。
+
+List这个接口的forEach方法作为消费性Consumer的lambda表达式。
+
+是没有返回值的。
+
+```java
+list.forEach((x) -> System.out.println(x));
+```
+
+#### T29
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103230856.png)
+
+#### T30
+
+不解释了 ，直接看图吧。
+
+![image-20210103231041492](/Users/Chihokyo/Library/Application Support/typora-user-images/image-20210103231041492.png)
+
+T31
+
+B
