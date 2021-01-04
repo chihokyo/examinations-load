@@ -2895,6 +2895,223 @@ list.forEach((x) -> System.out.println(x));
 
 ![image-20210103231041492](/Users/Chihokyo/Library/Application Support/typora-user-images/image-20210103231041492.png)
 
-T31
+#### T31
 
-B
+不会 蒙一个A
+
+蒙对了。原因就是Collection有什么方法。
+
+#### T32
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103232807.png)
+
+#### T33
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103233136.png)
+
+#### T34
+
+这一题真的是傻逼了。
+
+关于二维数组的问题。我误以为初始化的时候有了默认值所以输出就会出错。其实，事实上初始化的时候确实是0，但是赋值的时候指向了另一个新的空间。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103233522.png)
+
+#### T35
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103233955.png)
+
+#### T36
+
+没看懂 略
+
+#### T37
+
+使用没有被初始化的本地变量会报错
+
+#### T38
+
+数学运算优先级 略
+
+#### T39
+
+循环中出现continue符合条件以后的循环全部被skip，且如果有多余的语句就会报错。
+
+#### T40
+
+`num++ + num `因为是hou++ 所以是 0 + 0 然后在继续++ 也就是1
+
+所以结果就是
+
+`1 + "," + ++num + num`
+
+这后面就全部是字符串连接了 ，由于是先++ 那么就是2
+
+`1+ “，” + “2” + “2”`
+
+```java
+public class Main{
+	public static void main(String[] args){
+    int num = 0;
+    System.out.println(num++ + num + "," + ++num + num);
+  }
+}
+```
+
+#### T41
+
+这一题很基础。做错的话就说明自己没认真吧。
+
+```java
+String[] array = {"A","B","C","D","E"};
+for(String str: array) {
+  if("B".equals(str)){
+    continue;
+  }
+  sysout(str);
+  if("C".equals(str)){
+    break;
+  }
+}
+```
+
+#### T42
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104151314.png)
+
+#### T43
+
+关于module-info.java的一些注意点和用法
+
+#### T44
+
+简单 略
+
+#### T45
+
+这一题可以记住。抽象类里面有抽象方法&一般方法（包括static方法）
+
+- 抽象方法 不能写函数体 可以省略成 `public abstract void test();`
+- 一般方法 可以写函数体 不可以省略
+- static方法 同上
+
+#### T46
+
+Math的常用API
+
+public static int abs(int a)：绝对值 
+public static double ceil(double a):向上取整 
+public static double floor(double a):向下取整 
+public static int max(int a,int b):最大值 
+public static double pow(double a,double b):a的b次幂 
+public static double random():随机数 [0.0,1.0) 
+public static int round(float a) 四舍五入(参数为double的自学) 
+public static double sqrt(double a):正平方根
+
+#### T47
+
+关于继承的重写。必须全部一样。返回值可以是子类。
+
+Number是所有数值类型的子类。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104153016.png)
+
+#### T48
+
+关于java文件的编译执行问题。
+
+**方法一**
+
+javac Sample.java  编译
+
+java Sample 执行
+
+**方法二**
+
+java Sample.java 直接使用source file mode执行
+
+```java
+public class Sample{
+	public static void main(String[] args){
+    sysout("sample");
+  }
+}
+```
+
+#### T49
+
+```java
+public class Main {
+    int a, b;
+    public Main(int a, int b){
+        init(a, b);
+    }
+    public void init(int a, int b){
+        this.a = a * a;
+        this.b = b * b;
+    }
+    public static void main(String[] args) throws Exception {
+        int a = 2,b = 3;
+        Main m = new Main(a, b);
+      	System.out.println(a + " " + b);// 2 3
+        System.out.println(m.a + " " + m.b); // 4 9
+    }
+}
+```
+
+#### T50
+
+权限修饰符问题 略
+
+#### T51
+
+关于类型推断的问题 里面
+
+```java
+var list = new ArrayList<>();
+list.forEach(val -> System.out.println(val));
+```
+
+#### T52
+
+这一题我做对了，主要是一定要排除错误的选项。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104154949.png)
+
+#### T53
+
+略
+
+#### T54
+
+关于接口，方法不能包含final和private 因为是要继承&override的
+
+#### T55
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104155749.png)
+
+#### T56
+
+略
+
+#### T57
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104160144.png)
+
+#### T58
+
+简单 略
+
+#### T59
+
+自动拆包。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104160433.png)
+
+#### T60
+
+直接看解释吧。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104160850.png)
+
+
