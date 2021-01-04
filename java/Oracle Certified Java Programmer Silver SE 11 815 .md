@@ -3114,4 +3114,175 @@ list.forEach(val -> System.out.println(val));
 
 ![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104160850.png)
 
+#### T61
 
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104163112.png)
+
+#### T62
+
+这一题挺好的。我刚开始大意了。
+
+#### T63
+
+需要很细致看待的题。不然很容易错。
+
+#### T64
+
+略
+
+#### T65
+
+```java
+public class Main {
+     public static void main (String[] args) {
+         int a = 2;
+         int b = 1;
+         if (a ++ > ++ b) { // 这里比较的是2 ＞ 2 肯定是false
+             System.out.print("A");
+         } else {
+             System.out.print("B");// 输出B
+         }
+         System.out.println(a + ":" + b); // 后++
+     }
+}
+
+```
+
+#### T66
+
+**NullPointerException**
+
+#### T67
+
+不知道什么是pipeline的话可以看这个
+
+https://www.cnblogs.com/midhillzhou/p/5588958.html
+
+#### T68 记得回过头看一下
+
+有意思的一题。可以看一下。
+
+看了答案。感觉不太对。于是又认真思考了一下为什么的问题。发现了这一题提问的不是重载或者重写。而说的是继承之后哪个正确的。意思就是说既可以是重写，也可以是重载。
+
+按照重写的角度上来考虑，那么参数和返回值等等必须全部一样。返回值可以是父类。
+
+按照重载的概念来说，其他全部一样。只能是参数不一样的话，那么就是B
+
+按照重写的概念，答案就是F。
+
+重写的话。这个返回值的泛型一定要一样，返回值可以是有互换性的子类。
+
+A 重写 参数列表不行 泛型都不对 重载 返回值不行
+
+**B 重写 参数列表不行 重载 OK**
+
+C 重写 参数列表不行 重载 返回值不行
+
+D 重写 返回值不行 重载 返回值不行
+
+E 重写 参数列表不行 重载 参数列表不对
+
+**F 重写 可以 重载 参数列表不对**
+
+#### T69
+
+不难。但是要细心。
+
+#### T70
+
+有点意思。
+
+数组初始化[]问题
+
+- 有没有[] 没有的话就不是数组
+- 有没有指定多少个
+- 实例的话有没有写new
+- new的时候有没有写多少个
+
+#### T71
+
+![image-20210104175103902](/Users/Chihokyo/Library/Application Support/typora-user-images/image-20210104175103902.png)
+
+#### T72
+
+不难略
+
+#### T73
+
+不难。略
+
+#### T74
+
+有点难度。
+
+关于数组的clone()这个方法的问题。
+
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+        char[][] array1 = {{'a', 'b'}, {'c', 'd'}};
+        char[][] array2 = array1.clone();
+        char[] array3 = array1[1].clone();
+        System.out.println(array1 == array2);
+        System.out.println(array1[1] == array2[1]);// true
+        System.out.println(array1.equals(array2));
+        System.out.println(array1[1] == array3);
+    }
+}
+```
+
+这一题其实我想的是对的，但是做起来的时候可能脑袋不清晰。出现了问题。array1和2其实是独立的。2个地址。但是因为是二维的，他们存储的也是地址。
+
+array[0] 指向的其实是一个地址，这个地址就是一个一维数组。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104180349.png)
+
+equals没有重写。用的是Object的 也就是说数组是引用类型，比较的是地址。那么就是false
+
+这一题可以跟79T有一个梦幻联动。
+
+#### T75
+
+略
+
+#### T76
+
+记住规律就能做出来
+
+#### T77
+
+关于异常，我又错了。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104181002.png)
+
+#### T78
+
+注意点1 static 在哪里声明都是提前加载。顺序无关。
+
+注意点2 本地变量必须先声明。
+
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+        sample();
+        int a = b;
+        int b = num;
+    }
+    private static void sample(){
+        System.out.println(num);
+    }
+    static int num;
+}
+```
+
+#### T79
+
+梦幻联动上面74题。同样都是复制clone，一个复制的一维数组。一个复制的二维数组。
+
+#### T80
+
+switch 在符合条件的情况下不去break 就会继续执行，直到break；
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104181729.png)
+
+这样就一目了然。
