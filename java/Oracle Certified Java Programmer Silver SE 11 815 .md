@@ -1804,10 +1804,17 @@ source file mode java指令可以直接进行编译了。
 
 java.lang里面的类无需import
 
-引入的时候有2种。
+解释一下这一题的概念。如果需要使用class的话。有两种模式，一种就是写全名，一种就是import先引入。
 
-- 完全修饰
-- 部分修饰
+```java
+// 1
+import com.sample;
+new sample();
+// 2 
+new com.sample();
+```
+
+要注意的就是 `com.sample.*；` 这样引入的只能引入的是sample下面所有的类。并不代表也能自动引入` com.sample.test.*;`
 
 #### T4
 
@@ -1890,6 +1897,8 @@ jar  打包命令
 
 这一题很好了。
 
+首先C作为一个普通类继承了抽象类B，这就要重写抽象方法z。又实现了A，所以也要重写方法x。但是由于继承了B方法的x所以可以不用重写。
+
 ```java
 public interface A {
   abstract void x();
@@ -1901,7 +1910,7 @@ public abstract class B {
 
 public class C extends B implements A {
   // 这里写什么呢。
-  因为C继承了B实现了A 所以z肯定是要重写的。按理说x也要重写。但是由于继承了B的x 所以没必要重写。
+  // 因为C继承了B实现了A 所以z肯定是要重写的。按理说x也要重写。但是由于继承了B的x 所以没必要重写。
 }
 ```
 
@@ -1927,6 +1936,22 @@ public static void main (String[] args) throws java.lang.Exception
 因为javap生成中间code的时候可以看出来，关于case 使用的是hashCode来计算去到哪里的。null的数值无法 `null.hashCode();`
 
 ![image-20201223141323650](/Users/Chihokyo/Library/Application Support/typora-user-images/image-20201223141323650.png)
+
+#### T14
+
+forEach 就是一个Consumer类型的lambda表达式接口。
+
+#### T15
+
+javac -d 表达class的输出文件 默认跟java在同一个文件
+
+java -cp 可以指定class的path （因为java这个命令本身是要使用完全修饰的，并且path要和修饰path一样。）如果要执行当前文件夹外的class文件，就要用 -cp
+
+ABCD怎么对的和错的。可以参考原题。
+
+![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210106223310.png)
+
+#### T16
 
 #### T20
 
