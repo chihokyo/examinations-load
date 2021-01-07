@@ -2788,9 +2788,9 @@ super ⭕️ super.super ❌
 
 #### T16
 
-这一题就是没看清楚题意，就这么做错了。
+这一题在第二次做的时候又错了，仔细的看了一下题目。应该是这样理解的。
 
-虽然是一个包，但并非是一个文件。import还是分文件的
+import 是记录在各个文件里面的。谁使用就import谁，不使用就不imort。即使都在一个package里面。也需要import。
 
 #### T17
 
@@ -2860,6 +2860,12 @@ public class Sample {
 ![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210103225343.png)
 
 #### T26
+
+staic方法里面只能调用static的方法和属性。其他不行。
+
+首先这一题从main里面调用test是可以的，因为这俩都是static。
+
+但是如果从test里面调用num就不行。因为num不是static
 
 ```java
 public class Main {
@@ -2948,7 +2954,19 @@ list.forEach((x) -> System.out.println(x));
 
 #### T36
 
-没看懂 略
+lambda表达式变量和本地变量不可以重名
+
+```java
+import java.util.function.Consumer
+public class Main {
+  public static void main(String[] args){
+    final String val = "Hello Lambda"; // 这里的变量val
+    Consumer<String> func (val) -> System.out.println(val);
+    // 和这里的变量重复了
+    func.accept("Hello, Java");
+  }
+}
+```
 
 #### T37
 
@@ -3065,6 +3083,8 @@ public class Sample{
 
 #### T49
 
+是否实例化，调用的是哪里的变量呢？实例变量？类变量？静态变量？
+
 ```java
 public class Main {
     int a, b;
@@ -3136,6 +3156,8 @@ list.forEach(val -> System.out.println(val));
 #### T60
 
 直接看解释吧。
+
+就是个可读性的问题。还是选择全名那种。
 
 ![](https://raw.githubusercontent.com/chihokyo/image_host/master/20210104160850.png)
 
