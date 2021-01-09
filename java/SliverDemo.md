@@ -188,3 +188,190 @@ class Myclass {
 // Car--red--My
 ```
 
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+       String s1 = new String("ORACLE");
+       String s2 = "ORACLE";
+       String s3 = s1.intern();
+       System.out.println(s1 == s2);
+       System.out.println(s2 == s3);
+       System.out.println(s1 == s3);
+      // false
+			// true
+			// false
+    }
+}
+```
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+       AnotherClass ac = new AnotherClass();
+       SomeClass sc = new SomeClass();
+       ac = sc;
+       sc.methodA();
+       ac.methodA();
+    }
+}
+
+class SomeClass {
+    public void methodA() {
+        System.out.println("SomeClass methodA");
+    } 
+}
+
+class AnotherClass extends SomeClass {
+     public void methodA() {
+        System.out.println("AnotherClass methodA");
+    } 
+}
+// Cast
+```
+
+
+
+```java
+import java.util.*;
+
+public class Main {
+    public void analyze(Object[] o){
+        System.out.println("I am object array");
+    }
+    public void analyze(long[] o){
+        System.out.println("I am long array");
+    }
+    public void analyze(Object o){
+        System.out.println("I am object");
+    }
+    
+    public static void main(String[] args) throws Exception {
+       int[] nums = new int[10];
+       new Main.analyze(nums);
+    }
+}
+```
+
+常量没有初始化
+
+```java
+import java.util.*;
+
+public class Main {
+    private final double value;
+    public Main(String value){
+        this(Double.parseDouble(value));
+    }
+    public Main(double value){
+        this.value = value;
+    }
+    
+    public Main () {
+        
+    }
+    
+    public double getValue(){
+        return value;
+    }
+    public static void main (String[] args) {
+       Main m1 = new Main("1.99");
+       Main m2 = new Main(2.99);
+       Main m3 = new Main();
+       System.out.println(m1.getValue() + ", " + m2.getValue() + "," + m3.getValue());
+    }
+}
+```
+
+```java
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Bar b = new Bar();
+        b.foo();
+        b.bar();
+    }
+}
+class Foo {
+    private void print(){
+        System.out.println("Bonjour le monde");
+    }
+    public void foo(){
+        print();
+    }
+}
+class Bar extends Foo {
+    private void print(){
+        System.out.println("hello world");
+    }
+    public void bar(){
+        print();
+    }
+}
+```
+
+```java
+public class Main {
+    private int sum;
+    public int compute(){
+        int x = 0;
+        while(x < 3){
+            sum += x++;
+        }
+        return sum;
+    }
+    public static void main(String[] args) throws Exception {
+        Main m = new Main();
+        int sum = m.compute();
+        sum = m.compute();
+        m.compute();
+        System.out.println(sum); //6
+    }
+}
+
+```
+
+```java
+public class Main {
+    
+    static Map<String, String> map = new HashMap<>();
+    static List<String> keys = new ArrayList<>(List.of("A", "B", "C", "D"));
+    static String[] values = {"one", "two", "three", "four"};
+    static {
+        for (var i = 0; i < keys.size(); i++ ){
+            map.put(keys.get(i), values[i]);
+            
+        }
+    }
+        
+    public static void main(String[] args) throws Exception {
+       keys.clear();
+       values = new String[0];
+       System.out.println("Map" + map.size() + "keys" + keys.size() + "Value" + values.length);
+    }
+}
+
+```
+
+```java
+public class Main {
+    
+    public void analyze(Object[] o) {
+        System.out.println("I am an object array");
+    }
+    public void analyze(long[] l) {
+        System.out.println("I am an long array");
+    }
+    public void analyze(Object o) {
+        System.out.println("I am an object");
+    }
+    public static void main (String[] args) {
+        int[] nums = new int[10];
+        new Main().analyze(nums);
+    }
+}
+// I am an object
+```
+

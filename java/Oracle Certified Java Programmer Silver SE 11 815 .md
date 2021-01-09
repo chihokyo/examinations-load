@@ -2616,6 +2616,8 @@ public class Main {
 
 不难
 
+这一题的Object因为是比String大，需要强制转换类型才可以的。
+
 ![](https://raw.githubusercontent.com/chihokyo/image_host/master/20201231155710.png)
 
 #### T69
