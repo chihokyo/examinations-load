@@ -1,6 +1,6 @@
 # Java 备考记录
 
-## Java SE 11 Programmer 1Z0-815-JPN
+## ① Java SE 11 Programmer 1Z0-815-JPN
 
 ### 笔记
 
@@ -13,3 +13,7 @@
 ### 结果
 
 1月9日 合格㊗️
+
+## ② Java SE 11 Programmer II (1Z0-816-JPN) 
+
+### 笔记
