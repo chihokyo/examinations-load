@@ -385,3 +385,106 @@ class Sample13 extends B13 implements A13 {
     }
 }
 ```
+
+Q14
+
+接口的私有默认方法。这个是 java9 新增了。
+
+9 之前接口里面只能
+
+- public final static 属性 （全局常量）
+- public abstract 方法
+- static 方法
+- default 方法
+
+9 之后新增 private 方法
+
+注意点，就是必须写上方法体。`void test()`不可以，必须要`void test(){}`不。
+
+```java
+public interface Q14 {
+
+    // 8之前
+    public final static int NUM = 99; // 1️⃣全局常量
+    int NUM2 = 99; // 全局常量(简写)
+
+    public abstract void eat(); // 2️⃣抽象方法
+
+    void eat2(); // 抽象方法(简写)
+
+    // 8新增
+    public static void foo() {
+    } // 3️⃣静态方法
+
+    default void bar() {
+    } // 4️⃣默认方法
+
+    // 9新增 5️⃣私有方法
+    private void test() {
+    }
+
+}
+
+```
+
+Q15
+
+考察的枚举类的方法
+
+- `values()` 返回枚举类中所有的值
+- `valueOf()`方法返回指定字符串值的枚举常量
+
+```java
+public enum Q15 {
+
+    RED, GREEN, BLUE;
+}
+
+
+class TestQ15 {
+    public static void main(String[] args) {
+        // 获取所有的枚举类的值 返回数组，所以可以使用索引
+        Q15[] arrs = Q15.values();
+        for (Q15 arr : arrs) {
+            System.out.println(arr);
+        }
+        // 获取枚举常量
+        System.out.println(Q15.valueOf("RED"));
+    }
+}
+```
+
+Q16
+
+这一题考察的是枚举类的本质。很难。
+
+本质就是每一个常量都是一个单例的。
+
+```java
+package com.gold.chapter01;
+
+public class Q16 {
+    public static void main(String[] args) {
+        // 而由于你又重写了toString() 相当于这里也要打印最后一次，也就是第4次
+        System.out.println(SampleQ16.A);
+    }
+}
+
+enum SampleQ16 {
+    // 这里相当于生成了3个实例，也就是new了3次。
+    // 所以触发了3次构造器，那么就打印了3次hello
+    A("hello"), B("hello"), C("hello"),
+    ;
+    private final String value;
+
+    private SampleQ16(String value) {
+        System.out.println(value);
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
+    }
+}
+```
