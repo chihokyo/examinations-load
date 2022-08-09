@@ -488,3 +488,159 @@ enum SampleQ16 {
     }
 }
 ```
+
+## 9 异常&断言
+
+Q1
+
+考察的多异常捕获技术。
+
+java7 开始推出了多异常捕获技术。
+
+- 捕获多种类型的异常时，多种异常类型之间用竖线`|`隔开
+- 捕获多种类型的异常时，异常变量有隐式的 final 修饰，因此程序不能对异常变量重新赋值。
+
+Q2
+
+多个异常捕获必须是**没有继承关系**的，不可以是父子类包裹。
+
+由于 RuntimeException 和 Exception 是有子父类关系的
+
+```java
+try {
+
+}
+catch( RuntimeException | Exception) {
+  ❌
+}
+
+```
+
+Q3
+
+考察自定义异常
+
+- 一般地，用户自定义异常类都是 RuntimeException 的子类。
+- 自定义异常类通常需要编写几个重载的构造器。
+- 自定义异常需要提供 serialVersionUID
+- 自定义的异常通过 throw 抛出。
+- 自定义异常最重要的是异常类的名字，当异常出现时，可以根据 名字判断异常类型。
+
+体系如下，简言之。所有的错误 error 和异常 exception 都是**Throwable 的子类**。error 基本上是无视掉的，
+
+所以
+
+> **自定义异常的话，都是要继承 exception 的。**
+
+![Exceptionクラス図](https://i0.wp.com/freelance-jak.com/wp-content/uploads/2018/11/ddff3151292065db3f28b48804a10f14.jpg?resize=608%2C551&ssl=1)
+
+Q4
+
+下面的题目到 9 为止都可以读一读这篇文章，写的不错
+
+[【Java】例外構文 3 種類の活用方法解説](https://workteria.forward-soft.co.jp/blog/detail/10226)
+
+普通的考察 try-with-resource 的定义而已。本质就是并不是处理异常的，只是为了关闭资源的。
+
+Q5
+
+这一题考察了特点，有 3 个。
+
+- try 语句中声明的资源被隐式声明为 final，资源的作用局限于带资源的 try 语句。
+- 可以在一条 try 语句中声明或初始化多个资源，每个资源以`;`隔开即可。
+- 需要关闭的资源必须实现了 **AutoCloseable 或 Closeable** 接口。
+
+Q6
+
+考察的 try-with-resource 特点，就是在 try 里面使用的资源。必须是**不可改变**的，比如说更改资源。
+
+```java
+try (A a = new A()) {
+		a = new A(); // ❌
+}
+```
+
+Q7
+
+资源关闭的顺序，是和定义相反的。
+
+```java
+A a = new A();
+try (a:B b = new B(); C = new C()) {
+  // 定义的时候是A → B → C
+}
+```
+
+但是关闭的顺序是相反的。
+
+Q8
+
+考察在 try-with-resource 里面如果 try 发生的错误，close，catch，finally 的执行顺序
+
+```java
+public class Q9 {
+    public static void main(String[] args) {
+        try (SampleResource sampleResource = new SampleResource();) {
+            // 这里发生错误了之后按照close → catch → finally的顺序
+            throw new Exception();
+        } catch (Exception e) {
+            System.out.println("catch");
+        } finally {
+            System.out.println("finally");
+        }
+    }
+}
+
+class SampleResource implements AutoCloseable {
+    @Override
+    public void close() throws Exception {
+        System.out.println("close");
+    }
+}
+```
+
+Q9
+
+考察的是异常执行
+
+AutoCloseable 抛出 Exception
+
+Closeable 抛出 IOException
+
+```java
+public class Q9 {
+    public static void main(String[] args) {
+        try (TroubleResource troubleResource = new TroubleResource();) {
+            throw new Exception();
+        } catch (RuntimeException e) {
+            System.out.println("A");
+        } catch (Exception e) {
+            // 一旦catch到了这里 后面就会被无视
+            System.out.println("B");
+        }
+    }
+}
+
+
+// AutoCloseable 抛出的是 Exception 异常
+class TroubleResource implements AutoCloseable {
+    @Override
+    public void close() throws Exception {
+        throw new RuntimeException("trouble");
+    }
+}
+```
+
+Q10
+
+考察的断言
+
+语句`assert x >= 0;`即为断言，断言条件`x >= 0`预期为`true`。如果计算结果为`false`，则断言失败，抛出`AssertionError`
+
+Q11
+
+死记硬背就可以了。
+
+```
+java -ea assert模块
+```
