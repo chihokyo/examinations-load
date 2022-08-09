@@ -489,6 +489,96 @@ enum SampleQ16 {
 }
 ```
 
+## 8 注解
+
+注解感觉就是给代码贴标签。表示一种含义，加个标签 mark 一下。
+
+JDK 内置的三个基本注解
+
+> @Override: 限定重写父类方法, 该注解只能用于方法
+>
+> @Deprecated: 用于表示所修饰的元素(类, 方法等)已过时。通常是因为 所修饰的结构危险或存在更好的选择
+>
+> @SuppressWarnings: 抑制编译器警告
+
+Q1
+
+这一题很 easy，就是考察的自定义注解怎么写.
+
+> - ① 注解声明为：@interface
+> - ② 内部定义成员，通常使用 value 表示
+> - ③ 可以指定成员的默认值，使用 default 定义
+> - ④ 如果自定义注解没有成员，表明是一个标识作用。
+
+```java
+@Inherited // 继承性
+@Repeatable(MyAnnotations.class)
+@Retention(RetentionPolicy.RUNTIME)
+@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE,TYPE_PARAMETER,TYPE_USE})
+public @interface MyAnnotation {
+    String value() default "hello";
+}
+
+```
+
+Q2
+
+考察的是指定成员怎么写，感觉就是 类型 + 值方法
+
+```java
+String test();
+// 用的时候就是
+@MyAnnotation(test="字符串")
+```
+
+Q3
+
+这一题考察的是元注解，什么是元注解。修饰注解的注解就是元注解。
+
+> RetentionPolicy.SOURCE:在源文件中有效(即源文件保留)，编译器直接丢弃这种策略的 注释
+>
+> RetentionPolicy.CLASS:在 class 文件中有效(即 class 保留) ， 当运行 Java 程序时, JVM 不会保留注解。 这是默认值
+>
+> RetentionPolicy.RUNTIME:在运行时有效(即运行时保留)，当运行 Java 程序时, JVM 会 保留注释。程序可以通过反射获取该注释。
+>
+> 上面的话很简单，编译之后不见了就是 source，编译之后还有就是 class，如果运行在内存之后还要继续保留就是 runtime，（一般用反射拿到标签都要在这里，因为反射是运行时行为。
+
+问的是编译之后不见，那肯定是 source 了。
+
+Q4
+
+Target 也是个元注解。不写就默认修饰全部。
+
+Q5
+
+检查子类父类是否重写对的时候，用@override 注解。可以防止手误。
+
+```java
+class P {
+	void love();
+}
+
+@Override // 可以在你编译阶段防止你手残
+class C extends P {
+	void iove();
+}
+
+```
+
+Q6
+
+这个送分题目。
+
+Q7
+
+记住就不会错
+
+```java
+@SuppressWarnings("unchecked") // 编译阶段无视检查
+@SuppressWarnings("removal") // 非推荐且未来确定会被移除方法采用这个
+@SuppressWarnings("deprecation") // 一般非推荐用这个
+```
+
 ## 9 异常&断言
 
 Q1
@@ -644,3 +734,9 @@ Q11
 ```
 java -ea assert模块
 ```
+
+## 10 国际化
+
+可以先读一下这篇文章，写的还不错的。
+
+[Java - Properties 和 ResourceBundle 类学习](https://www.jianshu.com/p/7ab8a900eb7d)
