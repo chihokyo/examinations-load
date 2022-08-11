@@ -1,4 +1,4 @@
-package chapter09;
+package com.gold.chapter09;
 
 public class Q9 {
     public static void main(String[] args) {

@@ -740,3 +740,141 @@ java -ea assert模块
 可以先读一下这篇文章，写的还不错的。
 
 [Java - Properties 和 ResourceBundle 类学习](https://www.jianshu.com/p/7ab8a900eb7d)
+
+然后就是很基础的东西了，没有什么特别难以理解的。基本上死记硬背足以解决。
+
+Q1
+
+死记硬背型
+
+```java
+// 获得此Java虚拟机当前线程默认的语言环境值
+Locale locale = Locale.getDefault();
+```
+
+Q2
+
+这个也是死记硬背型，创建 locale 对象总共有几种方式
+
+[这个笔记绝了，记得看 Java8 官网笔记](https://zq99299.github.io/java-tutorial/i18n/locale/create.html#locale-构造函数)
+
+创建 `Locale` 对象的四种方法是：
+
+- `Locale.Builder` 类
+- `Locale` 构造函数
+- `Locale.forLanguageTag` 工厂方法
+- `Locale` 常量 / Constants
+
+Q2 考的是构造器，
+
+```java
+new Locale("语言", "地区"); // 地区大写的多
+```
+
+Q3
+
+这一题考的是 Locale` 常量 创建
+
+答案背下来就好
+
+```java
+Locale  locale2 = Locale.US;
+System.out.println(locale2); // en_US
+```
+
+下面 3 个是等效的
+
+```java
+j4Locale = Locale.JAPAN;
+j5Locale = new Locale.Builder().setLanguage("ja").setRegion("JP").build();
+j6Locale = new Locale("ja", "JP");
+```
+
+Q4
+
+`Locale.Builder` 类创建
+
+本质就是一个链式调用，最后一个使用`build()`函数来构建
+
+感觉这个 builder 模式蛮有趣的，写一下吧。其实就是通过内部类给外部类增加属性。
+
+```java
+public class Q4 {
+
+    public static void main(String[] args) {
+        Item a = new Item.Builder().setName("sample").build();
+        System.out.println(a.getName()); // sample
+    }
+}
+
+
+class Item {
+    // 成员属性（私有）
+    private String name;
+
+    // 内部静态类
+    public static class Builder {
+        // 这里是内部类的属性
+        private String name;
+        // 走到这里设置上面的Builder的name也就是sample了
+        public Builder setName(String name) {
+            this.name = name;
+            // 这个this是什么呢？
+            return this;
+        }
+
+        public Item build() {
+            if (this.name == null) {
+                throw new IllegalStateException();
+            }
+            // 在内部类里创建了Item对象
+            Item item = new Item();
+            // 这一步很经典，就是把Builder的name给了Item的name
+            // 这样就给Item的name赋值了
+            item.name = this.name;
+            // 赋值之后返回item，此时item已经有了name了
+            return item;
+        }
+    }
+
+    // 只有一个属性默认就是this.name
+    // 也就是成员属性了
+    public String getName() {
+        return name;
+    }
+}
+```
+
+Q5
+
+工厂方法创建
+
+> 如果您具有符合 IETF BCP 47 标准的语言标签字符串，则可以使用 Java SE 7 发行版中引入的 [`forLanguageTag(String)`](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#forLanguageTag-java.lang.String-) 工厂方法。
+
+```java
+Locale aLocale = Locale.forLanguageTag("en-US");
+Locale bLocale = Locale.forLanguageTag("ja-JP-u-ca-japanese");
+```
+
+Q6
+
+从这里开始就是 Properties 的内容了,properties 本质就是一个 HashTable。
+
+书写格式 2 种都可以
+
+- `key:value`
+- `key=value`
+
+Q7
+
+既然是 HashTable 就是一个可迭代对象，考察 API 的。不难
+
+Q8
+
+这个考察打印 properties 信息的方法。
+
+最好的是直接用 list 方法对字符串直接打印，选 D
+
+Q9
+
+这个考察了就是`get()`和`getProperty()`的区别，前一个取出来是 Object，后一个是 String，一般打印都是直接输出的 String，所以选 getProperty()。
