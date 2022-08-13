@@ -489,6 +489,258 @@ enum SampleQ16 {
 }
 ```
 
+## 2 lambda
+
+学习半天，做题半天。
+
+这个是很难理解的，函数式编程如果学的好的话，这个估计理解的会快一点。
+
+导入看这个[什么是 lambda 表达式？lambda 表达式的应用场景分析](https://www.shouxicto.com/article/824.html)
+
+常用的函数式接口（本质就是 1 个接口只有 1 个抽象方法，1+1）
+
+![Java的函数式接口](https://static001.geekbang.org/infoq/af/af36efa5b914cedb149629c20fed07c2.png)
+
+Q1
+
+死记硬背
+
+Supplier 供给型，是`get()`。只产出。
+
+Q2
+
+考察的就是只进不出，接受 0 参数，返回 1 个结果。同时抽象方法是`get()`
+
+符合这个条件的只有 C
+
+Q3
+
+死记硬背 Consumer 消费性，是`accept()`只消费。
+
+Q4
+
+这一个考察的是 Consumer 的用法，接受 1 个参数，然后没有返回值。符合这个条件的只有 A
+
+Q5
+
+这一题是 BiConsumer，她和 Consumer 比就是参数上的问题。给了 2 个参数。切还是没有返回值。符合这个条件的只有 B
+
+Q6
+
+死记硬背，Predicate，判断的，`test()`
+
+Q7
+
+这一题考察了 Predicate 的 default 的`or()`方法。
+
+用于判定 2 个方法同样的输入是否相同。语法糖一样。
+
+```java
+default Predicate<T> or(Predicate<? super T> other) {
+  Objects.requireNonNull(other);
+  return (t) -> test(t) || other.test(t);
+}
+```
+
+```java
+public class Q7 {
+    public static void main(String[] args) {
+        Predicate<Integer> p1 = x -> x > 0;
+        Predicate<Integer> p2 = x -> x < 0;
+        // 原本写法
+        System.out.println(p1.test(100) || p2.test(100)); // true
+        // 可以简写为
+        System.out.println(p1.or(p2).test(100));
+    }
+}
+
+```
+
+Q8
+
+考察 BiPredicate，其实和 Predicate 一模一样，只是参数多了 1 个而已。返回值是 boolean
+
+```java
+boolean test(T t, U u);
+```
+
+Q9
+
+死记硬背，Function 对应的是`apply()`
+
+Q10
+
+基本和死记硬背差不多了，方法排除掉几个错误方法。
+
+区别就是
+
+```java
+a.compose(b); // 先b
+a.andThen(b); // 先a
+```
+
+```java
+public interface Function<T, R> {
+
+    R apply(T t);
+
+    default <V> Function<V, R> compose(Function<? super V, ? extends T> before) {
+        Objects.requireNonNull(before);
+        return (V v) -> apply(before.apply(v));
+    }
+
+    default <V> Function<T, V> andThen(Function<? super R, ? extends V> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> after.apply(apply(t));
+    }
+
+    static <T> Function<T, T> identity() {
+        return t -> t;
+    }
+}
+
+```
+
+Q11
+
+输入 T，U，返回 R 类型。
+
+```java
+public interface BiFunction<T, U, R> {
+
+    /**
+     * Applies this function to the given arguments.
+     *
+     * @param t the first function argument
+     * @param u the second function argument
+     * @return the function result
+     */
+    R apply(T t, U u);
+}
+```
+
+差不多就是这样 ↓
+
+```java
+public class Q11 {
+    public static void main(String[] args) {
+        BiFunction<Integer, Integer, String> test = (a, b) -> Integer.toString(a + b);
+        System.out.println(test.apply(10, 6)); // 16
+    }
+}
+```
+
+Q12
+
+死记硬背。继承自 Function，那肯定`apply()`了。
+
+返回一个一元运算符，它总是返回其输入参数。
+
+```java
+@FunctionalInterface
+public interface UnaryOperator<T> extends Function<T, T> {
+
+    /**
+     * Returns a unary operator that always returns its input argument.
+     *
+     * @param <T> the type of the input and output of the operator
+     * @return a unary operator that always returns its input argument
+     */
+    static <T> UnaryOperator<T> identity() {
+        return t -> t;
+    }
+}
+
+```
+
+Q13
+
+对列表进行统一处理最好的就是 UnaryOperator，使用如下
+
+```java
+public class Q13 {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+
+        // replaceAll方法这里接受一个
+        /**
+         * default void replaceAll(UnaryOperator<E> operator) {
+         *         Objects.requireNonNull(operator);
+         *         final ListIterator<E> li = this.listIterator();
+         *         while (li.hasNext()) {
+         *             li.set(operator.apply(li.next()));
+         *         }
+         *     }
+         */
+
+        list.replaceAll(x -> x.toUpperCase());
+        for (String l : list) {
+            System.out.println(l); // A B C
+        }
+    }
+}
+```
+
+Q14
+
+考察的 BinaryOperator，继承自 BiFunction，只是参数是 1 个泛型。
+
+```java
+public interface BinaryOperator<T> extends BiFunction<T,T,T>
+```
+
+使用例子
+
+这里最重要的是看泛型，参数，返回值。
+
+```java
+public class Q14 {
+    public static void main(String[] args) {
+        // 连接字符串
+        BinaryOperator<String> b = (str, add) -> str.concat(add);
+        System.out.println(b.apply("hello", "chin")); // hellochin
+    }
+}
+
+// 下面是用一个工厂方法,工厂生产的只是方法体
+class OperatorFactory {
+    public static BinaryOperator<Integer> add() {
+        return (a, b) -> a + b;
+    }
+
+    public static BinaryOperator<Integer> minus() {
+        return (a, b) -> a - b;
+    }
+}
+
+class UseOperatorFactory {
+    public static void main(String[] args) {
+        BinaryOperator<Integer> op = OperatorFactory.add();
+        System.out.println(op.apply(1, 9)); // 10
+
+        BinaryOperator<Integer> op2 = OperatorFactory.minus();
+        System.out.println(op2.apply(1, 7)); // -6
+    }
+}
+```
+
+## 3 并发
+
+这一章如果要理解的话太难，但实际考察不是那么多。所以建议放弃。
+
+可以直接背诵答案了。
+
+## 4 StreamAPI（2）
+
+## 5 IO（1）
+
+## 6 JDBC （1）
+
+## 7 集合（1）
+
 ## 8 注解
 
 注解感觉就是给代码贴标签。表示一种含义，加个标签 mark 一下。
@@ -878,3 +1130,48 @@ Q8
 Q9
 
 这个考察了就是`get()`和`getProperty()`的区别，前一个取出来是 Object，后一个是 String，一般打印都是直接输出的 String，所以选 getProperty()。
+
+Q10
+
+这一题就是死记硬背
+
+```
+native2ascii input output
+```
+
+Q11
+
+死记硬背
+
+- ISO-8895-1
+- UTF-8
+
+Q12
+
+记住这一题是一个静态方法`getBundle()`
+
+Q13
+
+这一题其实也是个死记硬背，主要是考察的 ResourceBundle 这个库可以跟随你设置的语言环境进行加载不同的配置文件
+
+Q14
+
+Locale 发生异常使`MissingResourceException`
+
+Q15
+
+`getBundle()`第 2 个参数可以设置**位置**情报
+
+Q16
+
+死记硬背，选一下 A
+
+Q17
+
+货币信息死记硬背选`getCurrencyInstance()`
+
+## 11 模块化（0.5）
+
+## 12 安全（0.5）
+
+## 总
