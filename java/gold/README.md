@@ -1170,7 +1170,108 @@ Q17
 
 货币信息死记硬背选`getCurrencyInstance()`
 
-## 11 模块化（0.5）
+## 11 模块化
+
+9 开始导入的，在 package 之上多了一个 module，以前没有的时候，就是引入依赖之后包里面的所有都是暴露的，引入 module 之后，就是需要多一个`module-info.java`，只有你暴露出去的包才能被引入
+
+导出
+
+```java
+module common（这里是模块的名字） {
+  exports 包名
+}
+```
+
+导入
+
+```java
+module 模块名（这里是模块的名字） {
+  requires 模块
+  uses 具体到哪个包
+}
+```
+
+open 和 exports
+
+- exports 编译和运行都可以对外提供
+- open 只能在运行时期通过**反射**操作来获取当前类，来创建对象等操作（解耦合）
+
+还有一些其他特点，比如 java.lang 这种，都是可以自动被导入的，无需写 requires。
+
+Q1
+
+模块化有很多优点，但是并不能像 private 那样，具备隐蔽性。
+
+优点如下
+
+Q2
+
+关于反射的关键字，那么就是 opens 了，运行时通过反射来获取当前类。
+
+Q3
+
+大概就是说
+
+> Java 9 中引入的模块系统除了类路径之外，还增加了**模块路径**的概念。顾名思义，模块路径就是放置模块的路径，编译器和 JVM 按照模块路径搜索需要的模块。如果要在运行时将任意位置添加到模块路径，请使用 --module-path 选项。
+
+模块系统可以将模块分为三种类型：命名模块、自动模块和匿名模块
+
+- 命名模块
+- 自动模块
+- 匿名模块
+
+这一题主要考察的是 3 者的关系，大概就是这样的。
+
+[![異なる種類のモジュール間の参照可否](https://news.mynavi.jp/techplus/article/imajava-5/images/001.jpg)](https://news.mynavi.jp/techplus/photo/article/imajava-5/images/001l.jpg)
+
+**命名模块是无法直接去引用匿名模块的。**
+
+具体可以看这篇文章[Java のモジュールシステムを理解しよう](https://news.mynavi.jp/techplus/article/imajava-5/)
+
+Q4
+
+考察的是对于匿名模块的**自底向上** bottom-up 查找规则，从最多被引用的模块开始查找，然后逐渐到命名的。
+
+Q5
+
+考察的是对于匿名模块的**自顶向下** top-down 查找规则，从上面被引用的顺序开始，先变换成自动模块。还有就是，从上面被引用的顺序开始，从命名模块开始转换。
+
+Q6
+
+这一题建议死记硬背吧。考的是 java 命令行。
+
+要运行一个 jar，使用`java -jar xxx.jar`命令。
+
+要运行一个模块 👇🏻
+
+```java
+java --module-path hello.jar（jar包） --module hello.world（具体类）
+```
+
+Q7
+
+死记硬背，考察的`java-util-ServiceLoader`用来干嘛的
+
+考察的是 SPI 第三方机制，具体可以看这文章，不理解的话直接看这个就好。这一题可以背下来。就是一个类的加载器。
+
+[ServiceLoader 详解](https://www.cnblogs.com/aspirant/p/10616704.html)
+
+Q8
+
+使用第三方 SPI 的接口，要用 uses
+
+Q9
+
+背下来就好，这一题考察的是 jdep 命令行的参数。
+
+jdeps(java dependencies)是 java8 推出一个命令行工具，此工具主要是帮助开发者们列出类依赖及层级关系的信息。
+
+```java
+jdeps -jdkinternals // 在 JDK 内部 API 上查找类级别的被依赖对象
+jdeps -verbose:class  // 默认情况下输出类级别被依赖对象
+jdeps -profile // 显示配置文件或包含程序包的文件
+jdeps -apionly // 只是用来限制分析对象是否是public or protected
+```
 
 ## 12 安全（0.5）
 
