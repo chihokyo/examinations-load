@@ -13,8 +13,10 @@ public class Q1 {
 
         System.out.println("**************");
 
-
         Locale  locale2 = Locale.US;
         System.out.println(locale2); // en_US
+
+        System.out.println("hello world");
+
     }
 }

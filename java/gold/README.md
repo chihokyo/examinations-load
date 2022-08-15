@@ -737,9 +737,454 @@ class UseOperatorFactory {
 
 ## 5 IO（1）
 
+这一章节考察死记硬背比较多。
+
+Q1
+
+就是考察 File 这个类主要是干什么的。具体就是只是表达一种抽象的概念，并不是实际操作文件和文件夹的。
+
+```java
+/**
+ * 1. File类的一个对象，代表一个文件或一个文件目录(俗称：文件夹)
+ * 2. File类声明在java.io包下
+ * 3. File类中涉及到关于文件或文件目录的创建、删除、重命名、修改时间、文件大小等方法，
+ * 并未涉及到写入或读取文件内容的操作。如果需要读取或写入文件内容，必须使用IO流来完成。
+ * 4. 后续File类的对象常会作为参数传递到流的构造器中，指明读取或写入的"终点".
+ *
+ *
+ * 我感觉就是这个类只能处理文件和文件夹，相当于cd和mkdir和touch，顶多在stat一下。
+ * 但是对于写入写出这些流的操作，这个类是不可以的。
+ */
+```
+
+Q2
+
+就是考察 File 的 API 而已，想获取 File 类型那么肯定就是`listFiles()`
+
+```java
+File f2 = new File("/Users/chin/coolcode/examinations-load/java/gold");
+String[] list = f2.list();
+// 注意看类型
+for (String l : list) {
+  System.out.println(l);
+}
+
+File[] files = f2.listFiles();
+// 注意看类型
+for (File f : files) {
+  System.out.println(f);
+}
+```
+
+Q3
+
+接下来都是考察几个 IO 流的区别。
+
+可以看一下这篇文章[两张图总结 Java 中的 IO 流分类](https://ca3tie1.github.io/post/java-io-tips/)
+
+![两张图总结Java中的IO流分类](https://ca3tie1.github.io/post-images/java-io-tips.jfif)
+
+这一题文的是对于文本的处理，对于文本，也就是字符流。说到字符就是**Reader/Writer**。
+
+![image-20220815170437432](https://raw.githubusercontent.com/chihokyo/image_host/develop/image-20220815170437432.png)
+
+Q4
+
+这一题考察的是处理图片音频这种字节流的 API，同时又写了更有效率。
+
+首先考虑缓冲。又是读取。所以就是**BufferedInputStream**。
+
+Q5
+
+这一题考察的是 FileReader API 的用法。
+
+```
+public FileWriter (String fileName,
+                  Charset charset,
+                  boolean append)
+           throws IOException
+构造一个FileWriter给定一个文件名， charset和一个布尔值，指示是否附加写入的数据。
+参数
+fileName - 要写入的文件的名称
+charset - charset
+append - 布尔值。 如果是true ，则编写器会将数据写入文件的末尾而不是开头。
+异常
+IOException - 如果指定的文件存在但是是目录而不是常规文件，则不存在但无法创建，或者由于任何其他原因无法打开
+从以下版本开始：
+11
+```
+
+Q6
+
+关于 java.io.BufferedWriter 的说法。
+
+`write()`只是写入缓冲区， 手动将 buffer 中内容写入文件，用`flush()`
+
+Q7
+
+死记硬背吧，readAllBytes 一次性读写全部。
+
+Q8
+
+返回 char 数组
+
+```java
+// java.lang.Object
+//		java.io.Console
+public char[] readPassword()
+```
+
 ## 6 JDBC （1）
 
-## 7 集合（1）
+## 7 集合与常用类
+
+Q1
+
+这一题考的是包装类。
+
+| 基本类型 | 对应的引用类型          |
+| :------- | :---------------------- |
+| boolean  | java.lang.Boolean       |
+| byte     | java.lang.Byte          |
+| short    | java.lang.Short         |
+| int      | java.lang.**Integer**   |
+| long     | java.lang.Long          |
+| float    | java.lang.Float         |
+| double   | java.lang.Double        |
+| char     | java.lang.**Character** |
+
+注意有俩很特殊，不是首字母大小就 OK 的。
+
+Q2
+
+考察不指定泛型默认就是 Object
+
+> 泛型如果不指定，将被擦除，泛型对应的类型均按照 Object 处理，但不等价 于 Object。经验:泛型要使用一路都用。要不用，一路都不要用。
+
+```java
+public class Q2 {
+    public static void main(String[] args) {
+        Value v = new Value("Hello");
+        Object val = v.getVal();
+        // 所有的不确定泛型都可以写成Object，准没错。
+    }
+}
+
+class Value<T> {
+    T val;
+
+    public Value(T val) {
+        super();
+        this.val = val;
+    }
+
+    public T getVal() {
+        return val;
+    }
+}
+
+```
+
+Q3
+
+考察泛型可以用在哪里
+
+- 变量赋值
+- 方法的参数
+- 方法的返回值
+
+```java
+public class Q3 {
+    public static void main(String[] args) {
+        // 变量代入
+        List<String> list = new ArrayList<>();
+        // 参数
+        execute(new ArrayList<>());
+    }
+
+    private static List<String> test() {
+        // 返回值
+        return new ArrayList<>();
+    }
+
+    private static void execute(List<String> list) {
+
+    }
+}
+```
+
+Q4
+
+考察泛型在继承上的体现。
+
+> 如果 B 是 A 的一个子类型(子类或者子接口)，而 G 是具有泛型声明的
+>
+> 类或接口，G<B>并不是 G<A>的子类型! 比如:String 是 Object 的子类，但是 List<String >并不是 List<Object>
+>
+> 的子类
+
+```java
+public class Q4 {
+    public static void main(String[] args) {
+        // A和B有继承关系，但是泛型是不适用的
+        // ❌ Item<A> a = new Item<B>();
+        // ❌ Item<Object> a = new Item<A>();
+        Item<A> a = new Item<A>(); // ✅
+    }
+}
+
+class A {
+
+}
+
+class B extends A {
+
+}
+
+
+class Item<T> {
+
+}
+```
+
+Q5
+
+考察有限制的通配符
+
+- 类型通配符 `List<?>`
+- `<? extends Number> (无穷小 , Number]` → 只允许泛型为 Number 及 Number 子类的引用调用 就是
+- `<? super Number> [Number , 无穷大)` → 只允许泛型为 Number 及 Number 父类的引用调用
+- `<? extends Comparable>` → 只允许泛型为实现 Comparable 接口的实现类的引用调用
+
+这个太简单。
+
+Q6
+
+这个也太简单了。
+
+Q7
+
+这一题考察的是通配符使用注意
+
+- **读取**List<?>的对象 list 中的元素时，永远是安全的，因为不管 list 的真实类型 是什么，它包含的都是 Object。
+- **写入**list 中的元素时，不行。因为我们不知道 c 的元素类型，我们不能向其中添加对象。null 除外
+
+```java
+public class Q7 {
+    public static void main(String[] args) {
+        List<?> list = null;
+        list.add(null); // 只被允许添加null，其他都不可以
+        // list.add("AA"); ❌
+        Object o = list.get(0); // ？默认的返回值类型都是Object
+    }
+
+}
+```
+
+Q8
+
+其实和上一题差不多，在有？的情况下，除了 null 都不能添加。
+
+```java
+public class Q8 {
+    public static void main(String[] args) {
+        List<? extends Number> list = new ArrayList<Integer>();
+        // list.add(1); 除了add(null) 其他都无法添加
+        // list.add(2);
+    }
+}
+```
+
+Q9
+
+这一题很 easy
+
+<? super B> 意思就是要比B和B大的类才行
+
+Q10
+
+考察Collection和Map的体系。
+
+![Java Map Collection Tutorial and Examples](https://www.codejava.net/images/articles/javacore/collections/collections%20framework%20overview.png)
+
+反正这一题的答案是List，考察有顺序的列表。
+
+Q11
+
+考察Queue，先进先出。FIFO
+
+Q12
+
+考察Deque，双端队列。
+
+Q13
+
+考察Set的特点。就是无序的，唯一的。
+
+> |----Set接口：存储无序的、不可重复的数据   -->高中讲的“集合”
+>  * |----HashSet：作为Set接口的主要实现类；线程不安全的；可以存储null值
+>
+>    * |----LinkedHashSet：作为HashSet的子类；遍历其内部数据时，可以按照添加的顺序遍历
+>
+>      ​		对于频繁的遍历操作，LinkedHashSet效率高于HashSet.
+>
+>  * |----TreeSet：可以按照添加对象的指定属性，进行**排序**。
+
+Q14
+
+考察Map的特点。
+
+简单理解成键值对。
+
+> |----Map:双列数据，存储key-value对的数据   ---类似于高中的函数：y = f(x)
+>  *         |----HashMap:作为Map的主要实现类；线程不安全的，效率高；存储null的key和value
+>            *         |----LinkedHashMap:保证在遍历map元素时，可以按照添加的顺序实现遍历。
+>                      *         原因：在原有的HashMap底层结构基础上，添加了一对指针，指向前一个和后一个元素。
+>                      *         对于频繁的遍历操作，此类执行效率高于HashMap。
+>  *         |----TreeMap:保证按照添加的key-value对进行排序，实现排序遍历。此时考虑key的自然排序或定制排序
+>            *         底层使用红黑树
+>  *         |----Hashtable:作为古老的实现类；线程安全的，效率低；不能存储null的key和value
+>            *         |----Properties:常用来处理配置文件。key和value都是String类型
+
+Q15
+
+考察API而已。
+
+```java
+public class Q15 {
+    public static void main(String[] args) {
+        var a = Map.entry(1, "A");
+        var b = Map.entry(2, "B");
+        var c = Map.entry(3, "C");
+        Map<Integer, String> map = Map.ofEntries(a, b, c);
+        // Set<Map.Entry<Integer, String>> entries = map.entrySet(); 这是idea给我生成的，本质一样
+        // 只是把Map换成了Set，更具体了而已
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+    }
+}
+```
+
+Q16
+
+这个就是考察Comparable的`compareTo()`
+
+> Comparable接口的使用举例：  自然排序
+>     1.像String、包装类等实现了Comparable接口，重写了compareTo(obj)方法，给出了比较两个对象大小的方式。
+>     2.像String、包装类重写compareTo()方法以后，进行了从小到大的排列
+>     3. 重写compareTo(obj)的规则：
+>         如果当前对象this大于形参对象obj，则返回正整数，
+>         如果当前对象this小于形参对象obj，则返回负整数，
+>         如果当前对象this等于形参对象obj，则返回零。
+>         4. 对于自定义类来说，如果需要排序，我们可以让自定义类实现Comparable接口，重写compareTo(obj)方法。
+>        在compareTo(obj)方法中指明如何排序
+
+默认是从小到大排序的。大于返回正，小于返回负数，等于返回0
+
+```java
+class Goods implements Comparable {
+    private String name;
+    private double price;
+
+    public Goods() {
+    }
+
+    public Goods(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Goods) {
+            Goods goods = (Goods) o;
+            if (this.price > goods.price) {
+                return 1;
+            } else if (this.price < goods.price) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+        throw new RuntimeException("传入数据类型不一致");
+    }
+}
+```
+
+Q17
+
+这个就是考察Comparator的`compare()`方法
+
+> Comparator接口的使用：定制排序
+>     1.背景：
+>     当元素的类型没有实现java.lang.Comparable接口而又不方便修改代码，
+>     或者实现了java.lang.Comparable接口的排序规则不适合当前的操作，
+>     那么可以考虑使用 Comparator 的对象来排序
+>     2.重写compare(Object o1,Object o2)方法，比较o1和o2的大小：
+>     如果方法返回正整数，则表示o1大于o2；
+>     如果返回0，表示相等；
+>     返回负整数，表示o1小于o2。
+
+```java
+public class Q17 {
+    public static void main(String[] args) {
+        String[] arr = new String[]{"AA", "CC", "KK", "MM", "GG", "JJ", "DD"};
+        Arrays.sort(arr, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                if (o1 instanceof String && o2 instanceof String) {
+                    String s1 = (String) o1;
+                    String s2 = (String) o2;
+                    // 直接翻转一下就好
+                    return -s1.compareTo(s2);
+                }
+                return 0;
+            }
+        });
+        System.out.println(Arrays.toString(arr));
+
+        // 用lambda写
+        Arrays.sort(arr, (o1, o2) -> {
+            if (o1 instanceof String && o2 instanceof String) {
+                String s1 = (String) o1;
+                String s2 = (String) o2;
+                // 直接翻转一下就好
+                return -s1.compareTo(s2);
+            }
+            return 0;
+        });
+        System.out.println(Arrays.toString(arr));
+    }
+}
+
+```
+
+
 
 ## 8 注解
 

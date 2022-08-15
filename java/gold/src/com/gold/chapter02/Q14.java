@@ -28,5 +28,7 @@ class UseOperatorFactory {
 
         BinaryOperator<Integer> op2 = OperatorFactory.minus();
         System.out.println(op2.apply(1, 7)); // -6
+
+
     }
 }
