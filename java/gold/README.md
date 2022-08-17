@@ -735,7 +735,7 @@ class UseOperatorFactory {
 
 ## 4 StreamAPI（2）
 
-## 5 IO（1）
+## 5 IO
 
 这一章节考察死记硬背比较多。
 
@@ -834,7 +834,259 @@ Q8
 public char[] readPassword()
 ```
 
-## 6 JDBC （1）
+Q9
+
+就是考察的流，普通的代码输出。
+
+```java
+public class Q9 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner("A,B,C,D,E");
+        scanner.useDelimiter(",");
+        try (scanner) {
+            scanner.next();
+            scanner.next();
+            scanner.next();
+            scanner.next();
+            System.out.println(scanner.next()); // E
+        }
+    }
+}
+```
+
+Q10
+
+考察`public interface Serializable` 这个接口什么抽象方法都没有。只是表达可以被序列化。
+
+![image-20220817142637594](https://raw.githubusercontent.com/chihokyo/image_host/develop/image-20220817142637594.png)
+
+Q11
+
+写入序列化`writeObject()`
+
+读取序列化`readObject()`
+
+Q12
+
+nio2 可以简单理解成多了 3 大 API
+
+- java.nio.file.Paths
+- java.nio.file.Path
+- java.nio.file.Files
+
+这一题就是选择错误的，其实根本没有`Files.get()`这个方法。
+
+Q13
+
+考察 API
+
+当有的文件已经存在的时候，`createFile()`会出现 **FileAlreadyExistsException** - If a file of that name already exists (optional specific exception)
+
+```java
+public static Path createFile(Path path,
+ FileAttribute<?>... attrs)
+                       throws IOException
+```
+
+Q14
+
+```java
+public class Q14 {
+    public static void main(String[] args) throws IOException {
+        Path dir = Paths.get("a", "b");
+        Path file = dir.resolve(Paths.get("data.txt"));
+        // 相当于在指定文件夹下创建一个文件 a/b/data.txt
+        Files.createFile(file);
+    }
+}
+
+```
+
+Q15
+
+就是考察 API 记忆，拷贝使用`copy()`，移动`move()`
+
+Q16
+
+死记硬背类型，直接查看这个就好[Enum StandardOpenOption API](https://www.apiref.com/java11-zh/java.base/java/nio/file/StandardOpenOption.html)
+
+| Enum Constant       | 描述                                                                                                                                                       |
+| :------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `APPEND` ⭐️        | 如果为 [`WRITE`](https://www.apiref.com/java11-zh/java.base/java/nio/file/StandardOpenOption.html#WRITE)访问打开文件，则字节将写入文件末尾而不是开头。     |
+| `CREATE`            | 如果它不存在，请创建一个新文件。                                                                                                                           |
+| `CREATE_NEW`        | 如果文件已存在，则创建新文件失败。                                                                                                                         |
+| `DELETE_ON_CLOSE`   | 关闭时删除。                                                                                                                                               |
+| `DSYNC`             | 要求将文件内容的每次更新同步写入底层存储设备。                                                                                                             |
+| `READ`              | 打开以进行读取访问。                                                                                                                                       |
+| `SPARSE`            | 稀疏文件。                                                                                                                                                 |
+| `SYNC`              | 要求将文件内容或元数据的每个更新同步写入底层存储设备。                                                                                                     |
+| `TRUNCATE_EXISTING` | 如果该文件已存在且已打开以进行 [`WRITE`](https://www.apiref.com/java11-zh/java.base/java/nio/file/StandardOpenOption.html#WRITE)访问，则其长度将截断为 0。 |
+| `WRITE`             | 打开以进行写访问。                                                                                                                                         |
+
+Q17
+
+递归遍历文件夹，请用`find()`可以接收参数指定深度。
+
+```java
+public static Stream<Path> find(Path start,
+                                    int maxDepth,
+                                    BiPredicate<Path, BasicFileAttributes> matcher,
+                                    FileVisitOption... options)
+            throws IOException
+```
+
+Q18
+
+也是 API 死记硬背
+
+- 进入文件夹
+- 从文件夹出去
+- 访问文件
+- 无法访问文件
+
+没有处理完这一过程的 API。
+
+| 变量和类型        | 方法                                                  | 描述                                           |
+| :---------------- | :---------------------------------------------------- | :--------------------------------------------- |
+| `FileVisitResult` | `postVisitDirectory(T dir, IOException exc)`          | 在目录中的条目及其所有后代访问后，为目录调用。 |
+| `FileVisitResult` | `preVisitDirectory(T dir, BasicFileAttributes attrs)` | 在访问目录中的条目之前为目录调用。             |
+| `FileVisitResult` | `visitFile(T file, BasicFileAttributes attrs)`        | 为目录中的文件调用。                           |
+| `FileVisitResult` | `visitFileFailed(T file, IOException exc)`            | 为无法访问的文件调用。                         |
+
+## 6 JDBC
+
+这一章就是连接数据库的具体操作。
+
+> JDBC(Java Database Connectivity)是一个独立于特定数据库管理系统、通用的 SQL 数据库存取和操作的公共接口(一组 API)，定义了用来访问数据库的标准 Java 类库，(java.sql,javax.sql)使用这些类库可以以一种标准的方法、方便地访问数据库资源。
+
+一些重要的概念，接下来做题会用到。
+
+- 在程序中不需要直接去访问实现了 Driver 接口的类，而是由驱动程序管理器类(java.sql.DriverManager)去调用
+
+  这些 Driver 实现
+
+- **jdbc:mysql://localhost:3306/test** → （协议:子协议://地址）
+
+- 在 java.sql 包中有 3 个接口分别定义了对数据库的调用的不同方式:
+
+  - **Statement** :用于执行静态 SQL 语句并返回它所生成结果的对象。
+  - **PrepatedStatement** :SQL 语句被预编译并存储在此对象中，可以使用此对象多次高效地执行该语句。
+  - **CallableStatement** :用于执行 SQL 存储过程
+
+Q1
+
+基础概念，
+
+A 不只是操作数据，还有一些其他 API。C 他只是提供一些和其他数据库交互的驱动，是基础。并不直接提供类。D 不是特定的数据库，而是一种通用的。
+
+Q2
+
+URL 死记硬背
+
+Q3
+
+具体操作的类
+
+```
+DriverManager → getConnection()
+Driver → connec()
+```
+
+Q4
+
+关闭资源用的 Connection 里的`close()`
+
+Q5
+
+这一题考察不同接口数据库的调用
+
+不用传递参数的肯定是 Statetment
+
+Q6
+
+直接考察 API 是啥。`ps = conn.prepareStatement(sql语句);`
+
+```java
+	//通用的增、删、改操作(体现一:增、删、改 ; 体现二:针对于不同的表)
+public void update(String sql,Object ... args){
+    Connection conn = null;
+    PreparedStatement ps = null;
+    try {
+				//1.获取数据库的连接
+				conn = JDBCUtils.getConnection();
+				//2.获取PreparedStatement的实例 (或:预编译sql语句)
+				ps = conn.prepareStatement(sql);
+				//3.填充占位符
+				for(int i = 0;i < args.length;i++){
+            ps.setObject(i + 1, args[i]);
+        }
+				//4.执行sql语句
+        ps.execute();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }finally{
+} }
+```
+
+Q7
+
+Java 与数据库交互涉及到的相关 Java API 中的索引都从 1 开始。相当于设置每一个表的哪一列。
+
+Q8
+
+根本没填充占位符，肯定错误的。
+
+需要填充站位这个步骤。
+
+Q9
+
+`executeUpate()`方法可以查询成功更新了多少条数据。
+
+- `executeQuery()` 查询操作 返回查询结果
+- `execute()` 增删改语句操作 返回 boolean 更新结果
+- `executeBatch()` 批量操作用
+
+Q10
+
+是不需要参数的，不接受语句的。`prepareSatement()`里才写语句。
+
+```
+int executeUpdate() throws SQLException
+```
+
+Q11
+
+关于查询操作，`executeQuery()`查询之后得到的是一个 ResulteSet 的结果集。如果需要具体继续操作，需要通过`next()`进行,通过这一步才可以具体拿到哪一列的值。
+
+Q12
+
+关于`execute()`语句的问题，虽然说增删改可以用`executeUpate()`，查询可以用`executeQuery()` 。但是`execute()`相当于两者的结合体。
+
+当你不知道是查询还是增删改的时候可以用，因为当他是查询的时候返回的是 true，其他操作都是 false。
+
+```java
+boolean execute()
+         throws SQLException
+Executes the SQL statement in this PreparedStatement object, which may be any kind of SQL statement. Some prepared statements return multiple results; the execute method handles these complex statements as well as the simpler form of statements handled by the methods executeQuery and executeUpdate.
+The execute method returns a boolean to indicate the form of the first result. You must call either the method getResultSet or getUpdateCount to retrieve the result; you must call getMoreResults to move to any subsequent result(s).
+
+Returns:
+true if the first result is a ResultSet object; false if the first result is an update count or there is no result
+```
+
+Q13
+
+记忆 API 用的，批量操作用 Statement 里面的`executeBatch()`。
+
+Q14
+
+这也是记忆 API，
+
+```java
+CallableStatement proc = connection.prepareCall("{ call test_proc_mulresultset(?)}")
+ // 调用存储过程的sql语句。
+ // test_proc_mulresultset这个是存储过程的名称。这个sql是可以在数据库中执行的。你可以传入参数和获得还回结果等。
+```
 
 ## 7 集合与常用类
 
@@ -1718,6 +1970,8 @@ jdeps -profile // 显示配置文件或包含程序包的文件
 jdeps -apionly // 只是用来限制分析对象是否是public or protected
 ```
 
-## 12 安全（0.5）
+## 12 安全
+
+这一章全是死记硬背，都是理论。
 
 ## 总
