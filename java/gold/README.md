@@ -733,7 +733,149 @@ class UseOperatorFactory {
 
 可以直接背诵答案了。
 
-## 4 StreamAPI（2）
+## 4 StreamAPI
+
+这一章据说是考察最多的。前 8 题都考察的是新特性 Optional，后面考察的才是 StreamAPI。
+
+Q1
+
+```java
+String str = null;
+// 要求非空 否则报错
+Optional<String> op = Optional.of(str); // NullPointerException
+```
+
+Q2
+
+虽然`Optional.ofNullable(null)`可以放 null，但是`get()`会报错的。
+
+```java
+public class Q2 {
+    public static void main(String[] args) {
+        Optional<String> sample = Optional.ofNullable(null);
+        System.out.println(sample.get()); // NoSuchElementException
+    }
+}
+
+```
+
+Q3
+
+`orElse(value)`当里面为 null 的时候才用 value
+
+```java
+public class Q3 {
+    public static void main(String[] args) {
+        Optional<String> sample = Optional.of("A");
+        System.out.println(sample.orElse("B")); // A
+    }
+}
+
+```
+
+Q4
+
+虽然 A 选项的`get()` (NoSuchElementException)也会抛出异常，但任意异常的话还是用`orElseThrow()`
+
+```java
+public class Q4 {
+    public static void main(String[] args) throws Exception {
+        Optional<String> sample = Optional.empty();
+        System.out.println(sample.orElseThrow(() -> new Exception()));
+    }
+}
+
+```
+
+Q5
+
+- boolean isPresent() : 判断是否包含对象
+- void ifPresent(Consumer<? super T> consumer) :如果有值，就执行 Consumer 接口的实现代码，并且该值会作为参数传给它
+
+```java
+public class Q5 {
+    public static void main(String[] args) {
+
+        Optional<String> sample = Optional.of("test");
+        sample.ifPresent((str) -> System.out.println(str)); // test
+
+        // 只要有值才能发生，如果没有值，压根不会报错。下面的代码也压根不会执行
+        Optional<String> sampleNull = Optional.empty();
+        sampleNull.ifPresent((str) -> System.out.println(str));
+
+    }
+}
+```
+
+Q6
+
+就简单考察 API 记忆能力
+
+`ifPresentOrElse(Consumer<? super T> action, Runnable emptyAction)`
+如果存在值，则使用值执行给定操作，否则执行给定的基于空的操作。
+
+直接就是 A
+
+```java
+public class Q6 {
+    public static void main(String[] args) {
+        Optional<String> sample = Optional.empty();
+        Optional<String> sample2 = Optional.of("hello world");
+        sample.ifPresentOrElse((str) -> System.out.println(str), () -> System.out.println("null的话就执行我")); // null的话就执行我
+        sample2.ifPresentOrElse((str) -> System.out.println(str), () -> System.out.println("null的话就执行我")); // 2
+    }
+}
+```
+
+Q7
+
+特别 easy
+
+```java
+public class Q7 {
+    public static void main(String[] args) {
+        Optional<String> sample = Optional.of("abcde");
+        Optional<String> result = sample.map(str -> str.toUpperCase());
+
+        System.out.println(sample.get()); // abcde
+        System.out.println(result.get()); // ABCDE
+    }
+}
+```
+
+Q8
+
+这一题有点意思。主要是 map 的返回值问题，因为 map 里面调用的方法又是一个 optional，所以需要有包裹。解决方法，要么就是包裹一层。要么就是用`flatMap()`
+
+```
+<R> Stream<R>
+map(Function<? super T,? extends R> mapper)
+```
+
+```java
+public class Q8 {
+    public static void main(String[] args) {
+        Optional<Integer> a = Optional.of(100);
+        // Optional<Integer> b = a.map(price -> calc(price, 3));
+        // 这里的返回值问题，①调用calc的时候返回的其实是一个Optional<Integer>，
+        // ②但是map里面又返回了一个Optional 所以会有包裹
+        Optional<Optional<Integer>> b = a.map(price -> calc(price, 3));
+        System.out.println(b.get());
+
+        System.out.println("******解决方法*******");
+        Optional<Integer> b2 = a.flatMap(price -> calc(price, 3));
+        System.out.println(b2.get());
+    }
+
+    private static Optional<Integer> calc(int price, int qty) {
+        if (qty < 0) {
+            return Optional.empty();
+        }
+        return Optional.of(price * qty);
+    }
+}
+
+```
 
 ## 5 IO
 
