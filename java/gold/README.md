@@ -877,6 +877,318 @@ public class Q8 {
 
 ```
 
+Q9
+
+单纯的考察 API 而已。Java9 新增了一个只读集合 of()
+
+- 只读
+- 不能添加 null
+- 不能修改顺序
+- 相同的 list，通过 equal 比较是
+
+```java
+public class Q9 {
+    public static void main(String[] args) {
+
+        // 不可变的
+        List<Integer> integers = List.of(1, 2, 3);
+        // integers.add(6); ❌ // ImmutableCollections
+
+        List.of(1,2,3).forEach(x -> System.out.println(x)); // 遍历
+        List.of(1,2,3).forEach(System.out::println); // 另一种写法
+    }
+}
+```
+
+Q10
+
+概念理解题。选出不符合题意的。
+
+关羽为什么要用 stream 错误的就是。不能执行 for 语句这样的 break，continue 的关键字。主要也不是为了遍历的，而是为了处理数据的。
+
+Q11
+
+考察 array 转换成 stream，转换成 stream，有很多方式。
+
+```java
+public class Q11 {
+    public static void main(String[] args) {
+        // 方式1创建方法 通过集合
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("A", "B", "C"));
+        arrayList.stream(); // 1 创建一个顺序流（按照顺序来）
+        arrayList.parallelStream(); // 1 创建一个并行流
+
+        // 方式2 通过数组，调用 Arrays 的静态方法 stream
+        int[] arr = new int[]{1, 2, 3};
+        IntStream stream = Arrays.stream(arr);
+
+        // 方式3 Stream的方法
+        Stream<Integer> integerStream = Stream.of(1, 2, 3, 4, 5, 6);
+
+        // 方式4 创建无限流,0开始，会0,2,4,5...
+        Stream.iterate(0, t -> t + 2); // 因为是无限的
+    }
+}
+
+```
+
+Q12
+
+概念理解，关于 stream 的顺序问题。根据的不是追加顺序，而是根据你数据的特性进行的。
+
+```java
+public class Q12 {
+    public static void main(String[] args) {
+        // 按照顺序
+        List<String> list = Arrays.asList("A", "B", "C", "D", "E");
+        Stream<String> stream = list.stream();
+        stream.forEach(x -> System.out.println(x)); // A B C D E
+
+        // 按照特性
+        Set<String> set = new HashSet<>();
+        set.add("E");
+        set.add("D");
+        set.add("C");
+        set.add("B");
+        set.add("A");
+        Stream<String> stream2 = set.stream();
+        stream2.forEach(System.out::println); // A B C D E
+    }
+}
+```
+
+Q13
+
+创建 stream 流的方式。
+
+> Java8 中的 Collection 接口被扩展，提供了两个获取流 的方法:
+> default Stream<E> stream() : 返回一个顺序流
+> default Stream<E> parallelStream() : 返回一个并行流
+
+```java
+public class Q13 {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("A", "B", "C");
+        List<String> list2 = Arrays.asList("A", "B", "C");
+
+        Stream<String> stream = list.stream(); // 顺序流
+        Stream<String> stream1 = list2.parallelStream();// 并行流
+    }
+}
+```
+
+Q14
+
+AB 用`filter()`是对的，CD`map()`返回的又是一个流。肯定不行。
+
+```java
+public class Q14 {
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        list.stream().filter(x -> x > 5).forEach(System.out::println);
+    }
+}
+
+```
+
+Q15
+
+考察 API
+
+```java
+public class Q15 {
+    public static void main(String[] args) {
+        // 这一题我都不想写，意思就是说distinct是要看equal的，但是这里全是true，判断全都是一个
+        List<Value> list = Arrays.asList(
+                new Value("A"),
+                new Value("B"),
+                new Value("C"),
+                new Value("A")
+        );
+
+        long count = list.stream().distinct().count();
+        System.out.println(count); //
+
+    }
+}
+
+class Value {
+    private String data;
+
+    public Value(String data) {
+        this.data = data;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return 100;
+    }
+}
+```
+
+Q16
+
+概念理解，就是说`stream()`还是`parallelStream()`他们的区别
+
+`findFisrt()`
+
+- 没区别都是返回第一个
+
+`findAny()`
+
+- `stream()` 每次都是返回任一 （同一个）
+- `parallelStream()` 每次不保证是同一个
+
+```java
+public class Q16 {
+    public static void main(String[] args) {
+        // 顺序流
+        String[] array = {"A", "B", "C"};
+        Stream<String> stream = Arrays.stream(array);
+        Optional<String> res1 = stream.findAny();
+        res1.ifPresent(System.out::println); // A
+
+
+        String[] array2 = {"A", "B", "C"};
+        Stream<String> stream2 = Arrays.stream(array2);
+        Optional<String> res2 = stream2.findFirst();
+        res2.ifPresent(System.out::println); // A
+
+        // 并行流
+        List<Integer> integers = List.of(1, 2, 3);
+        integers.parallelStream().findAny().ifPresent(System.out::println);
+
+        List<Integer> integers2 = List.of(1, 2, 3);
+        integers2.parallelStream().findFirst().ifPresent(System.out::println);
+
+
+    }
+}
+
+```
+
+> 题意说的都是**处理**的第一个，事实上不是的。返回的是符合条件的，而不是处理的第一个。
+
+Q17
+
+单纯考察`sorted()`的 API
+
+```java
+public class Q17 {
+    public static void main(String[] args) {
+        List<Integer> integers = Arrays.asList(4, 5, 3, 2, 1);
+        integers.stream().sorted((a, b) -> {
+            if (a < b) return -1;
+            if (b < a) return 1;
+            return 0;
+        }).forEach(System.out::println);
+
+        // 和题目无关，这一题可以直接转换成
+        List<Integer> integers2 = Arrays.asList(4, 5, 3, 2, 1);
+        integers2.stream().sorted((a, b) -> {
+            return a - b;
+        }).forEach(System.out::println);
+
+        // 进一步进化
+        List<Integer> integers3 = Arrays.asList(4, 5, 3, 2, 1);
+        integers3.stream().sorted(Comparator.comparingInt(a -> a)).forEach(System.out::println);
+
+    }
+}
+```
+
+Q18
+
+其实也就是变量考察 API
+
+map 返回值的泛型，其实就是 map 里面函数的返回值
+
+```java
+public class Q18 {
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        // String::valueOf返回是String类型，所以这里也要返回这个
+        Stream<String> res = list.stream().map(String::valueOf);
+        System.out.println(res);
+    }
+}
+```
+
+Q19
+
+也是考察的 API，`reduce()`返回类型
+
+```java
+public class Q19 {
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        // reduce第一个参数是初始值，初始值是啥类型，返回值就是啥类型
+        Integer res = list.stream().reduce(0, (a, b) -> a + b);
+        System.out.println(res); // 15
+    }
+}
+```
+
+Q20
+
+考察 API，找最大值 max
+
+```java
+public class Q21 {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("B,", "A", "C", "D");
+        Optional<String> res = list.stream().max(String::compareTo);
+        res.ifPresent(System.out::println); // D
+    }
+}
+
+```
+
+Q21
+
+可以先看这篇文章。[Java 基础系列-Collector 和 Collectors](https://www.cnblogs.com/V1haoge/p/10748925.html)
+
+Q22
+
+考察方法
+
+```java
+public interface Collector<T, A, R> {
+    // supplier参数用于生成结果容器，容器类型为A
+    Supplier<A> supplier();
+    // accumulator用于消费元素，也就是归纳元素，这里的T就是元素，它会将流中的元素一个一个与结果容器A发生操作
+    BiConsumer<A, T> accumulator();
+    // combiner用于两个两个合并并行执行的线程的执行结果，将其合并为一个最终结果A
+    BinaryOperator<A> combiner();
+    // finisher用于将之前整合完的结果R转换成为A
+    Function<A, R> finisher();
+    // characteristics表示当前Collector的特征值，这是个不可变Set
+    Set<Characteristics> characteristics();
+}
+```
+
+真正的操作，就写在`accumulator()`里
+
+Q23
+
+就是考察的 API 的用法。
+
+```java
+public class Q23 {
+    public static void main(String[] args) {
+
+        List<Integer> list = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        List<Integer> res = list.stream().filter(n -> n % 2 == 0).collect(Collectors.toList());
+        res.forEach(System.out::println);
+    }
+}
+```
+
 ## 5 IO
 
 这一章节考察死记硬背比较多。
