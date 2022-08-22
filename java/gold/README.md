@@ -99,6 +99,13 @@ Person.Bird bird = p.new Bird(); // 1-b
 Person.Bird bird = new Person().new Bird(); // 2
 ```
 
+```java
+new Outer().Inner(); // ❌ 没这种 Inner此时是类，如果不是而是方法的话就可以
+new Outer.Inner();
+```
+
+D选项仔细看，多了一个`()`
+
 Q3 是在考验内部类调用 static 外部类的方法
 
 题解同上
@@ -292,6 +299,10 @@ class SampleIml implements Q10 {
 
 ```
 
+
+
+这一题幸好没有在SampleIml的`test()`加上overide的注解，否则是会报错的。
+
 Q11
 
 考察的是接口里面的 default 方法。
@@ -431,7 +442,7 @@ Q15
 
 考察的枚举类的方法
 
-- `values()` 返回枚举类中所有的值
+- `values()` 返回枚举类中所有的值的数组
 - `valueOf()`方法返回指定字符串值的枚举常量
 
 ```java
@@ -1187,6 +1198,159 @@ public class Q23 {
         res.forEach(System.out::println);
     }
 }
+```
+
+Q24
+
+这一题的题目给的代码明显有问题。少了 Employee 这个类。
+
+但是大概率靠什么应该是知道的。就是考察`groupingBy()`的返回值。是一个 Map，key 是指定的 lambda 返回值。value 是一个 list 数组。
+
+```java
+public class Q24 {
+    public static void main(String[] args) {
+        Department tokyo = new Department("tokyo");
+        Department osaka = new Department("osaka");
+        Department nagoya = new Department("nagoya");
+        Department hokaidou = new Department("hokaidou");
+        List<Department> list = List.of(tokyo, osaka, nagoya, hokaidou);
+        // 这一题就是考察的groupBy的返回值，返回一个Map
+        // key是你在groupingBy指定的函数的返回值，value是结果
+        Map<String, List<Department>> res = list.stream().collect(Collectors.groupingBy(Department::getName));
+        System.out.println(res);
+    }
+
+}
+
+class Department {
+    private String name;
+
+    public Department(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Department) {
+            Department other = (Department) o;
+            return this.name.equals(other.name);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+}
+
+```
+
+Q25
+
+本质就是考察 API，计算平均价格。
+
+```java
+public class Q25 {
+    public static void main(String[] args) {
+        Map<String, IntSummaryStatistics> map = Arrays.asList(new Book("A", 1000), new Book("B", 2000), new Book("A", 500))
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Book::getTitle,
+                        Collectors.summarizingInt(Book::getPrice)
+                ));
+        map.forEach((k, v) -> {
+            System.out.println(k + " : " + v);
+        });
+
+    }
+}
+
+class Book {
+    private String title;
+    private int price;
+
+    public Book(String title, int price) {
+        this.title = title;
+        this.price = price;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+}
+
+```
+
+Q26
+
+这一题也是考察 API，考的是`partitioningBy()`
+
+> 该方法将流中的元素按照给定的校验规则的结果分为两个部分，放到一个 map 中返回，map 的键是 Boolean 类型，值为元素的列表 List。
+
+这一题只打印的是 key。
+
+```java
+public class Q26 {
+    public static void main(String[] args) {
+
+        List<String> list = Arrays.asList("banana", "apple", "orange");
+        Stream<String> stream = list.stream();
+        Set<Boolean> booleans = stream.collect(Collectors.partitioningBy(str -> str.length() > 5)).keySet();
+        booleans.forEach(System.out::println); // false,true
+
+    }
+}
+
+```
+
+Q27
+
+考察 API 的`peek()`，还有执行结果。
+
+要记住是 1 个个执行的。
+
+```java
+public class Q27 {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("banana", "apple", "orange");
+        Stream<String> stream = list.stream();
+        stream.filter(str -> str.length() > 5)
+                // 这是一个debug方法，会输出到控制台
+                .peek(str -> System.out.println(str + " "))
+                // 这里先变为大写
+                .map(str -> str.toUpperCase(Locale.ROOT))
+                // 再次打印
+                .peek(str -> System.out.println(str + " "))
+                // 输出
+                .forEach(System.out::println); // 所以最后的结果就是单一的单词，(banana)小大大,(orange)小大大,
+    }
+}
+
+```
+
+Q28
+
+这个很 easy，其实就是流的话。终止操作只能执行 1 次，`forEach()`只能执行一次，否则就会报异常。
+
+```java
+public class Q28 {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("banana", "apple", "orange");
+        Stream<String> stream = list.stream();
+        System.out.println(stream.count());
+        stream.forEach(System.out::println); // ❌ IllegalStateException
+    }
+}
+
 ```
 
 ## 5 IO
@@ -2385,7 +2549,10 @@ Q4
 
 Q5
 
-考察的是对于匿名模块的**自顶向下** top-down 查找规则，从上面被引用的顺序开始，先变换成自动模块。还有就是，从上面被引用的顺序开始，从命名模块开始转换。
+考察的是对于匿名模块的**自顶向下** top-down 查找规则
+
+- 1 从上面被引用的顺序开始，先变换成命名模块。
+- 2 还有就是从依赖的开始，先转换成自动模块。
 
 Q6
 
@@ -2428,4 +2595,14 @@ jdeps -apionly // 只是用来限制分析对象是否是public or protected
 
 这一章全是死记硬背，都是理论。
 
-## 总
+## 总（1）
+
+### 1~40
+
+### 41~80
+
+## 总（2）
+
+### 1~40
+
+### 41~80
