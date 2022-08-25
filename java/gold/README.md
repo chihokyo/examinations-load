@@ -104,7 +104,7 @@ new Outer().Inner(); // ❌ 没这种 Inner此时是类，如果不是而是方�
 new Outer.Inner();
 ```
 
-D选项仔细看，多了一个`()`
+D 选项仔细看，多了一个`()`
 
 Q3 是在考验内部类调用 static 外部类的方法
 
@@ -299,9 +299,7 @@ class SampleIml implements Q10 {
 
 ```
 
-
-
-这一题幸好没有在SampleIml的`test()`加上overide的注解，否则是会报错的。
+这一题幸好没有在 SampleIml 的`test()`加上 overide 的注解，否则是会报错的。
 
 Q11
 
@@ -520,7 +518,7 @@ Supplier 供给型，是`get()`。只产出。
 
 Q2
 
-考察的就是只进不出，接受 0 参数，返回 1 个结果。同时抽象方法是`get()`
+考察的就是只出不进，接受 0 参数，返回 1 个结果。同时抽象方法是`get()`
 
 符合这个条件的只有 C
 
@@ -530,11 +528,13 @@ Q3
 
 Q4
 
-这一个考察的是 Consumer 的用法，接受 1 个参数，然后没有返回值。符合这个条件的只有 A
+这一个考察的是 Consumer 的用法，接受 1 个参数，然后没有返回值。符合这个条件的只有 A。
+
+B 有了返回值，CD 都有参数。
 
 Q5
 
-这一题是 BiConsumer，她和 Consumer 比就是参数上的问题。给了 2 个参数。切还是没有返回值。符合这个条件的只有 B
+这一题是 BiConsumer，她和 Consumer 比就是参数上的问题。给了 2 个参数。且还是没有返回值。符合这个条件的只有 B
 
 Q6
 
@@ -581,7 +581,7 @@ Q9
 
 Q10
 
-基本和死记硬背差不多了，方法排除掉几个错误方法。
+78 基本和死记硬背差不多了，方法排除掉几个错误方法。
 
 区别就是
 
@@ -915,7 +915,7 @@ Q10
 
 概念理解题。选出不符合题意的。
 
-关羽为什么要用 stream 错误的就是。不能执行 for 语句这样的 break，continue 的关键字。主要也不是为了遍历的，而是为了处理数据的。
+关于为什么要用 stream 错误的就是。不能执行 for 语句这样的 break，continue 的关键字。主要也不是为了遍历的，而是为了处理数据的。
 
 Q11
 
@@ -1132,7 +1132,7 @@ public class Q18 {
 
 Q19
 
-也是考察的 API，`reduce()`返回类型
+也是考察的 API，`reduce()`返回类型。
 
 ```java
 public class Q19 {
@@ -1144,6 +1144,8 @@ public class Q19 {
     }
 }
 ```
+
+> 补充一下，上面是因为有初始值了才这样。如果没有了 0 这个初始值那是什么返回类型呢？这个就是 Optional\<T>
 
 Q20
 
@@ -2258,7 +2260,7 @@ class SampleResource implements AutoCloseable {
 
 Q9
 
-考察的是异常执行
+考察的是异常执行。还有异常处理会隐蔽的特性。
 
 AutoCloseable 抛出 Exception
 
@@ -2268,11 +2270,12 @@ Closeable 抛出 IOException
 public class Q9 {
     public static void main(String[] args) {
         try (TroubleResource troubleResource = new TroubleResource();) {
-            throw new Exception();
-        } catch (RuntimeException e) {
+          // 1 try这里发生了异常，会先去用close进行关闭。
+            throw new Exception();// 3 然后close异常被无视之后，来到try的catch。仔细看这里是Exception异常
             System.out.println("A");
         } catch (Exception e) {
-            // 一旦catch到了这里 后面就会被无视
+            // 4 上面是Exception，输出B
+          
             System.out.println("B");
         }
     }
@@ -2283,6 +2286,7 @@ public class Q9 {
 class TroubleResource implements AutoCloseable {
     @Override
     public void close() throws Exception {
+      // 但是发现close这里也出现了异常，但是会被屏蔽
         throw new RuntimeException("trouble");
     }
 }
@@ -2599,7 +2603,391 @@ jdeps -apionly // 只是用来限制分析对象是否是public or protected
 
 ### 1~40
 
+Q1
+
+考察IO流的，这个是考察的`System.in` ，目前会显示的待输入。
+
+```java
+public class Q1 {
+    public static void main(String[] args) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            System.out.println("in : ");
+            String input = br.readLine();
+            System.out.println("out : " + input);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+
+```
+
+Q2
+
+同样考察的也是IO，nio
+
+```java
+public class Q2 {
+    public static void main(String[] args) throws Exception {
+        String fileName = "";
+        Stream<String> lines = Files.lines(Paths.get(fileName));
+        // 题目给的是这种 类型推断
+        var a = Files.lines(Paths.get(fileName));
+    }
+}
+
+```
+
+Q3
+
+这一题，死记硬背吧。看不懂。
+
+Q4
+
+考察lambda的forEach，不会返回任何值。
+
+Q5
+
+考察StreamAPI的。
+
+```java
+public class Q5 {
+    public static void main(String[] args) {
+        List<Item> list = List.of(
+                new Item("apple", 100),
+                new Item("banana", 80),
+                new Item("orange", 120)
+        );
+
+        double result = list.stream().filter(e -> e.getName().equals("apple"))
+                .mapToInt(Item::getPrice)
+                .average()
+                .getAsDouble();
+        System.out.println(result); // 100.00
+    }
+}
+
+```
+
+Q6
+
+这一题也是考察API的。主要是comparable和comparator的区别。
+
+Comparable - `o1.compareTo(o2)` 1个参数
+
+Comparator - `compare(o1,o2)` 2个参数
+
+这一题主要难点在于，compare参数在没有泛型的情况下。默认是Object，并且返回值一定要是一个int。
+
+A返回的是布尔。B没有使用泛型，用的String。D虽然用了泛型，但是实现方法错误，不该用`compareTo()`
+
+```java
+public class Q6 {
+    public static void main(String[] args) {
+        // 匿名实现类
+        // 1 这里用泛型，下面就可以不用Object
+        new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                // 2 这里返回String默认已经实现的，返回值正好是一个int
+                return o1.compareTo(o2);
+            }
+        };
+    }
+}
+```
+
+Q7
+
+考察的类型提升。
+
+```
+List<Integer> list = List.of(0,1,2,3,4);
+```
+
+如果这个时候想获取里面的数字
+
+```java
+❌ Double a = list.get(0); //这是不可以的，默认是返回Integer类型。你现在不可以转换成另一个类。 Integer不可以转换成Double。
+double a = list.get(0); // 这个是可以的，相当于Integer → int → 提升double
+```
+
+Q8
+
+接口的默认方法，和抽象类的方法重名情况。
+
+这一题建议配合第一章的，12,13题一起看。尤其是13题，一定要去看。
+
+```java
+interface Test {
+    public default void execute(String str) {
+        System.out.println("A");
+    }
+}
+
+abstract class AbstractClass {
+    private void execute(String str) {
+        System.out.println("B");
+    }
+}
+// 这里实现了接口继承了抽象类。
+// 编译是不会报错的，因为编译器把上面2个接口和类当成各自独立的方法
+// 并且编译时期，是类优先于接口！！所以会使用
+// 但是执行会出错，因为这里并没有说明你要调用哪个方法。一定要说明。
+class Sample extends AbstractClass implements Test {
+    public static void main(String[] args) {
+        new Sample().execute("hello"); // IllegalAccessError
+    }
+}
+```
+
+Q9
+
+简单。
+
+Q10
+
+这个第一要结合第9章的第9题一起看。
+
+Q11
+
+纯粹记忆的题目。
+
+Q12
+
+考察多线程的，建议死记硬背跳过。
+
+Q13
+
+这一个是考察日期格式的。
+
+```java
+public class Q13 {
+    public static void main(String[] args) {
+        Locale l = new Locale("en", "US");
+        LocalDate today = LocalDate.of(2021, 4, 1);
+        String mToday = today.format(
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(l)
+        );
+
+        String sToday = today.format(
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(l)
+        );
+        System.out.println(mToday); // Apr 1, 2021
+        System.out.println(sToday); // 4/1/21
+    }
+}
+```
+
+Q14
+
+死记硬背类型。
+
+Q15
+
+死记硬背类型。
+
+Q16
+
+考察Stream，此处写个代码就行。没什么难以理解的。
+
+Q17
+
+考察Stream，主要是关于stream的返回值。
+
+缺少代码。主要是2种方案都可以。
+
+Q18
+
+考察password在`System.console`的时候不显示输入信息。
+
+Q19
+
+看清楚题目。主要来考察的是HashSet和LinkedList的区别。
+
+Set是自动去重的。
+
+Q20
+
+考察Runnable的lambda表示，是没参数和返回值的。
+
+Q21
+
+考察在stream没有一个符合条件的时候，是没有任何反应的。
+
+```java
+public class Q21 {
+    public static void main(String[] args) {
+        var list = List.of("apple", "banana", "orange", "melon");
+        Optional<String> res = list.stream().filter(x -> x.contains("x")).reduce((i, j) -> i + "," + j);
+        res.ifPresent(System.out::println); // 没有符合条件的 就什么都不会发生
+    }
+}
+```
+
+
+
+Q22
+
+死记硬背
+
+Q23
+
+peek用来输出debug的感觉
+
+```java
+public class Q23 {
+    public static void main(String[] args) {
+        int array[][] = {{1, 2}, {3, 4}, {5, 6}};
+        long count = Stream.of(array)
+                .flatMapToInt(IntStream::of)
+                .map(n -> n * 2)
+                // 相当于debug输出到控制台
+                .peek(System.out::println)
+                .filter(n -> n % 3 == 0)
+                .count();
+        System.out.println(count);
+    }
+}
+
+```
+
+
+
+Q24
+
+死记硬背
+
+Q25
+
+enum默认的构造器都要是private的。
+
+Q26
+
+理论，死记硬背。
+
+interface接口在后期既有default方法，又可以用static方法。但是由于都要继承，所以方法不可能是final的，abstract类也同理。
+
+接口也没有构造器，抽象类是有的。
+
+接口的方法只能是private和public，没有protected。
+
+Q27
+
+没有很难，大家都关闭了。
+
+Q28
+
+一个API，记住就好。
+
+Q29
+
+建议和Q10一起看。重要。                                                    
+
+Q30
+
+考察`Files.deleteIfExists`的用法，不存在就是false，存在就是true。
+
+Q31
+
+在使用module的时候，无需必须有实现
+
+```java
+module Sample {
+  exports test;
+  uses test.Hello;
+}
+```
+
+但必须有
+
+- require
+- 无需再次编译可以添加新的class
+
+Q32
+
+```java
+public class Q32 {
+    public static void main(String[] args) {
+        Stream<Integer> a = Stream.of(1, 2, 3, 4, 5);
+        IntStream b = a.mapToInt(n -> n);
+        DoubleStream c = b.mapToDouble(n -> n);
+        // 上面都是从Steam转换成下一级的 IntStream和 DoubleStream 这是可以的
+        // ❌ 但是下面相当于从 DoubleStream 转换成stream不可以
+        // ❌ Stream<Integer> d = c.mapToInt(n->n);
+    }
+}
+
+```
+
+Q33
+
+记住就行了。dead lock 死锁。
+
+Q34
+
+这一题只要走一遍就知道了，删除了index为2的，数组长度根本就没3了。
+
+```java
+public class Q34 {
+    public static void main(String[] args) {
+        var list = new ArrayList<>();
+        list.add("A");
+        list.add(100);
+        list.add("B");
+        list.set(1, 200);
+        list.remove(2);
+        list.set(3, 300); // ❌ IndexOutOfBoundsException
+        System.out.println(list);
+    }
+}
+
+```
+
+Q35
+
+记下来就可以了。其实就是br2这个资源生成的时候，没有try-with-resource住。
+
+Q36
+
+这一题主要是`copyOf()`这个方法他返回的是一个不可变的，后面怎么可能操作呢。所以直接无法编译。
+
+Q37
+
+这一题其实很有意思。主要是`toString()`这个方法，你要重写的话。而枚举类的`valueOf()`方法，直接会调用`toString()`这个方法。
+
+需返回值肯定要是一个String，A首先这个`Type.values()[1]`返回是数组。然后`valueOf()`还是调用的`toString()`，死循环。B直接修饰符都给弄没了。C这个只会返回A.num 也就是1
+
+Q38
+
+考察的就是一个类的关系。
+
+Number下面就是Float，Integer，Short这些子类。
+
+extend 只能找比自身or自身小的类。
+
+super 只能找比自身or自身大的类
+
+Q39
+
+直接背下来吧。
+
+Q40
+
+```java
+ps.setInt(1,100);
+ps.setString(2,"Sample");
+ps.executeUpdate(); // 这个时候已经更新了俩 100 sample
+ps.setInt(1,101);// 更新了101 sample
+```
+
+最后相当于俩都正常执行的
+
+
+
 ### 41~80
+
+
 
 ## 总（2）
 
